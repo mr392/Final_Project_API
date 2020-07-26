@@ -5,6 +5,11 @@ from flask import render_template
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
 
+from app import Calculator
+
+
+
+
 
 app = Flask(__name__)
 mysql = MySQL(cursorclass=DictCursor)
@@ -28,6 +33,7 @@ def api_num_browse() -> str:
     json_result = json.dumps(result);
     resp = Response(json_result, status=200, mimetype='application/json')
     return resp
+
 
 
 
