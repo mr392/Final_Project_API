@@ -1,7 +1,7 @@
-CREATE DATABASE peopleData;
-use peopleData;
+CREATE DATABASE numberData;
+use numberData;
 
-CREATE TABLE IF NOT EXISTS tblPeopleImport (
+CREATE TABLE IF NOT EXISTS numberImport (
 
     `person_num` INT,
     `Height` NUMERIC(5, 2),
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS tblPeopleImport (
 
     PRIMARY KEY (`person_num`)
 );
-INSERT INTO tblPeopleImport (person_num, height, weight) VALUES
+INSERT INTO numberImport (person_num, height, weight) VALUES
     (1, 65.78, 112.99),
     (2, 71.52, 136.49),
     (3, 69.40, 153.03),
