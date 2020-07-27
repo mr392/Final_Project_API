@@ -5,7 +5,7 @@ from flask import render_template
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
 
-from app import Calculator
+
 
 
 
@@ -28,7 +28,7 @@ mysql.init_app(app)
 @app.route('/api/numbers', methods=['GET'])
 def api_num_browse() -> str:
     cursor = mysql.get_db().cursor()
-    cursor.execute('SELECT * FROM tblPeopleImport')
+    cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
     json_result = json.dumps(result);
     resp = Response(json_result, status=200, mimetype='application/json')
