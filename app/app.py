@@ -17,8 +17,17 @@ app.config['MYSQL_DATABASE_PORT'] = 3306
 app.config['MYSQL_DATABASE_DB'] = 'numberData'
 mysql.init_app(app)
 
+@app.route('/', methods=['GET'])
+def index():
+    user = {'username': 'Mike'}
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM numberImport')
+    result = cursor.fetchall()
+    return render_template('index.html', title='Home', user=user, num_result=result)
 
 
+
+#____________POSTMAN API's
 
 
 @app.route('/api/numbers', methods=['GET'])

@@ -1,21 +1,24 @@
 {% extends "layout.html" %}
 {% block content %}
-<a href="person/new"><button type="submit" class="btn btn-danger">Create New Person</button>
+<a href="person/new"><button type="submit" class="btn btn-danger">Create New Operation</button>
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">Person ID</th>
-        <th scope="col">Height</th>
-        <th scope="col">Weight</th>
+        <th scope="col">ID</th>
+        <th scope="col">Number 1</th>
+        <th scope="col">Number 2</th>
+        <th scope="col">Result </th>
 
     </tr>
     </thead>
     <tbody>
-    {% for person in people %}
+    {% for num in num_result %}
     <tr>
-        <td><a href="view/{{person.person_num}}">{{ person.person_num }}</a></td>
-        <td>{{ person.Height }}</td>
-        <td>{{ person.Weight }}</td>
+        <td><a href="view/{{num.id}}">{{ num.id }}</a></td>
+        <td> {{ num.num1 }}</td>
+        <td> {{ num.num2 }}</td>
+        <td> {{ num.result}}</td>
+
 
 
     </tr>
