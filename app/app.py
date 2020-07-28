@@ -40,7 +40,7 @@ def api_num_browse() -> str:
     return resp
 
 #----add
-@app.route('/api/numbers', methods=['POST'])
+@app.route('/api/numbers/add', methods=['POST'])
 def api_add() -> str:
     cursor = mysql.get_db().cursor()
     content = request.json
@@ -54,7 +54,7 @@ def api_add() -> str:
     return resp
 
 #---subtract
-@app.route('/api/subtract/numbers', methods=['POST'])
+@app.route('/api/numbers/subtract', methods=['POST'])
 def api_subtract() -> str:
     cursor = mysql.get_db().cursor()
     content = request.json
@@ -67,6 +67,33 @@ def api_subtract() -> str:
     resp = Response(status=201, mimetype='application/json')
     return resp
 
+#---multiply
+@app.route('/api/numbers/multiply', methods=['POST'])
+def api_multiply() -> str:
+    cursor = mysql.get_db().cursor()
+    content = request.json
+    multiply_result = calc.Calculator.multiply(calc.Calculator(), content['num1'], content['num2'])
+
+    inputData = (content['num1'], content['num2'], str(multiply_result))
+    sql_add_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s, "multiply", %s) """
+    cursor.execute(sql_add_query, inputData)
+    mysql.get_db().commit()
+    resp = Response(status=201, mimetype='application/json')
+    return resp
+
+#---divide
+@app.route('/api/numbers/divide', methods=['POST'])
+def api_divide() -> str:
+    cursor = mysql.get_db().cursor()
+    content = request.json
+    divide_result = calc.Calculator.divide(calc.Calculator(), content['num1'], content['num2'])
+
+    inputData = (content['num1'], content['num2'], str(divide_result))
+    sql_add_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s, "divide", %s) """
+    cursor.execute(sql_add_query, inputData)
+    mysql.get_db().commit()
+    resp = Response(status=201, mimetype='application/json')
+    return resp
 
 
 

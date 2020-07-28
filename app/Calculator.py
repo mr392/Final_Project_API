@@ -1,7 +1,7 @@
 from Addition import addition
 from Subtraction import subtraction
-# from Calc.Multiplication import multiplication
-# from Calc.Division import division
+from Multiplication import multiplication
+from Division import division
 # from Calc.Squaring import squaring
 # from Calc.Squarerooting import squarerooting
 
