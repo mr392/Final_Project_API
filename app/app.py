@@ -30,6 +30,19 @@ def api_num_browse() -> str:
     resp = Response(json_result, status=200, mimetype='application/json')
     return resp
 
+@app.route('/api/numbers', methods=['POST'])
+def api_add() -> str:
+    cursor = mysql.get_db().cursor()
+    content = request.json
+    inputData = (content['id'], content['num1'], content['num2'], content['result'])
+    sql_add_query = """INSERT INTO numberImport (id, num1, num2, result) VALUES (%s, %s, %s, %s) """
+    cursor.execute(sql_add_query, inputData)
+    mysql.get_db().commit()
+    resp = Response(status=201, mimetype='application/json')
+    return resp
+
+
+
 result = calc.Calculator.add(calc.Calculator(), 7, 2)
 print (result)
 
