@@ -36,8 +36,8 @@ def api_add() -> str:
     content = request.json
     add_result = calc.Calculator.add(calc.Calculator(), content['num1'], content['num2'])
 
-    inputData = (content['id'], content['num1'], content['num2'], str(add_result))
-    sql_add_query = """INSERT INTO numberImport (id, num1, num2, result) VALUES (%s, %s, %s, %s) """
+    inputData = (content['num1'], content['num2'], str(add_result))
+    sql_add_query = """INSERT INTO numberImport (num1, num2, result) VALUES (%s, %s, %s) """
     cursor.execute(sql_add_query, inputData)
     mysql.get_db().commit()
     resp = Response(status=201, mimetype='application/json')
