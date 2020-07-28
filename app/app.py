@@ -39,6 +39,7 @@ def api_num_browse() -> str:
     resp = Response(json_result, status=200, mimetype='application/json')
     return resp
 
+#----add
 @app.route('/api/numbers', methods=['POST'])
 def api_add() -> str:
     cursor = mysql.get_db().cursor()
@@ -51,6 +52,8 @@ def api_add() -> str:
     mysql.get_db().commit()
     resp = Response(status=201, mimetype='application/json')
     return resp
+
+
 
 
 
