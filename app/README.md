@@ -1,3 +1,5 @@
 IS601 FP
 
-![http](screenshots/http.PNG)
+![pic](/screenshots/http.PNG)
+
+![pic2](/screenshots/POSTMAN.PNG)
