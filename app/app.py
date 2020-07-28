@@ -34,7 +34,9 @@ def api_num_browse() -> str:
 def api_add() -> str:
     cursor = mysql.get_db().cursor()
     content = request.json
-    inputData = (content['id'], content['num1'], content['num2'], content['result'])
+    add_result = calc.Calculator.add(calc.Calculator(), content['num1'], content['num2'])
+
+    inputData = (content['id'], content['num1'], content['num2'], str(add_result))
     sql_add_query = """INSERT INTO numberImport (id, num1, num2, result) VALUES (%s, %s, %s, %s) """
     cursor.execute(sql_add_query, inputData)
     mysql.get_db().commit()
