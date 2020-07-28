@@ -1,6 +1,5 @@
-# Final_Project_API
 IS601 FP
 
-![pic](/screenshots/http.PNG)
+![pic](screenshots/http.PNG)
 
-![pic2](/screenshots/Postman.PNG)
+![pic2](screenshots/Postman.PNG)
