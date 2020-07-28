@@ -1,5 +1,5 @@
 from Addition import addition
-# from Calc.Subtraction import subtraction
+from Subtraction import subtraction
 # from Calc.Multiplication import multiplication
 # from Calc.Division import division
 # from Calc.Squaring import squaring
