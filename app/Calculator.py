@@ -1,9 +1,9 @@
-from Calc.Addition import addition
-from Calc.Subtraction import subtraction
-from Calc.Multiplication import multiplication
-from Calc.Division import division
-from Calc.Squaring import squaring
-from Calc.Squarerooting import squarerooting
+from Addition import addition
+# from Calc.Subtraction import subtraction
+# from Calc.Multiplication import multiplication
+# from Calc.Division import division
+# from Calc.Squaring import squaring
+# from Calc.Squarerooting import squarerooting
 
 class Calculator:
     result = 0

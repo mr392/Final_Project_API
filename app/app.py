@@ -4,11 +4,7 @@ from flask import Flask, request, Response, redirect
 from flask import render_template
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
-
-
-
-
-
+import Calculator as calc
 
 
 app = Flask(__name__)
@@ -34,7 +30,8 @@ def api_num_browse() -> str:
     resp = Response(json_result, status=200, mimetype='application/json')
     return resp
 
-
+result = calc.Calculator.add(calc.Calculator(), 7, 2)
+print (result)
 
 
 if __name__ == '__main__':
