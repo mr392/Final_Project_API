@@ -95,6 +95,48 @@ def api_divide() -> str:
     resp = Response(status=201, mimetype='application/json')
     return resp
 
+#------------combined
+@app.route('/api/numbers/', methods=['POST'])
+def api_both() -> str:
+    cursor = mysql.get_db().cursor()
+    content = request.json
+
+    if content['operation'] == "add":
+        add_result = calc.Calculator.add(calc.Calculator(), content['num1'], content['num2'])
+        inputData = (content['num1'], content['num2'], str(add_result))
+        sql_add_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s, "add", %s) """
+
+    elif content['operation'] == "subtract":
+        subtract_result = calc.Calculator.subtract(calc.Calculator(), content['num1'], content['num2'])
+        inputData = (content['num1'], content['num2'], str(subtract_result))
+        sql_add_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s, "subtract", %s) """
+
+    elif content['operation'] == "multiply":
+        multiply_result = calc.Calculator.multiply(calc.Calculator(), content['num1'], content['num2'])
+        inputData = (content['num1'], content['num2'], str(multiply_result))
+        sql_add_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s, "multiply", %s) """
+
+    elif content['operation'] == "multiply":
+        divide_result = calc.Calculator.divide(calc.Calculator(), content['num1'], content['num2'])
+        inputData = (content['num1'], content['num2'], str(divide_result))
+        sql_add_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s, "divide", %s) """
+    else:
+        print("Sorry information is missing!")
+
+
+
+
+
+
+
+    cursor.execute(sql_add_query, inputData)
+    mysql.get_db().commit()
+    resp = Response(status=201, mimetype='application/json')
+    return resp
+
+
+
+
 
 
 result = calc.Calculator.add(calc.Calculator(), 7, 2)
