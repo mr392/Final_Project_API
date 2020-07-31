@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,7 @@
 </head>
 
 <body>
+{% block content %}
   <center>
     <h1>{{ title }}</h1>
   </center>
@@ -26,8 +28,8 @@
           strokeColor: "rgba(151,187,205,1)",
           pointColor: "rgba(151,187,205,1)",
           data : [
-            {% for item in values %}
-               "{{ item }}",
+            {% for num in num_result %}
+               "{{ num.result }}",
               {% endfor %}
 	    ]
           }
@@ -56,7 +58,7 @@
     </script>
   </center>
 
-{% block content %}
+
 <table class="table">
     <thead>
     <tr>
@@ -71,7 +73,8 @@
     <tbody>
     {% for num in num_result %}
     <tr>
-        <td><a href="view/{{num.id}}">{{ num.id }}</a></td>
+        <!--<a href="view/{{num.id}}">-->
+        <td>{{ num.id }}</a></td>
         <td> {{ num.num1 }}</td>
         <td> {{ num.num2 }}</td>
         <td> {{ num.operation }}</td>

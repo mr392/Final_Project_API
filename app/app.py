@@ -113,7 +113,7 @@ def bar():
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
-    return render_template('bar_chart.html', title='Bitcoin Monthly Price in USD', max=17000, num_result=result, labels=bar_labels, values=bar_values)
+    return render_template('bar_chart.html', title='Bitcoin Monthly Price in USD', max=100, num_result=result, labels=bar_labels, values=bar_values)
 
 
 
