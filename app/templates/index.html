@@ -1,20 +1,51 @@
 {% extends "layout.html" %}
+
 {% block content %}
-
-
-<a href="person/new"><button type="submit" class="btn btn-danger">Create New Operation</button></a>
-
+<main class = "container" role="main">
 
 
 
-<canvas id="chart" width="600" height="400"></canvas>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Number 1</th>
+        <th scope="col">Number 2</th>
+        <th scope="col">Operation</th>
+        <th scope="col">Result </th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for num in num_result %}
+    <tr>
+        <!--<a href="view/{{num.id}}">-->
+        <td>{{ num.id }}</a></td>
+        <td> {{ num.num1 }}</td>
+        <td> {{ num.num2 }}</td>
+        <td> {{ num.operation }}</td>
+        <td> {{ num.result}}</td>
+
+
+
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+    <center>
+    <h1>{{ title }}</h1>
+</center>
+  <center>
+    <canvas id="chart" width="900" height="400"></canvas>
     <script>
       // bar chart data
       var barData = {
         labels : [
-          {% for item in labels %}
-           "{{ item }}",
-          {% endfor %}
+          {% for num in num_result %}
+               "{{ num.id }}",
+              {% endfor %}
 	],
 
         datasets : [{
@@ -22,8 +53,8 @@
           strokeColor: "rgba(151,187,205,1)",
           pointColor: "rgba(151,187,205,1)",
           data : [
-            {% for item in values %}
-               "{{ item }}",
+            {% for num in num_result %}
+               "{{ num.result }}",
               {% endfor %}
 	    ]
           }
@@ -50,36 +81,11 @@
      );
 
     </script>
+  </center>
 
-
-
-
-
-<table class="table">
-    <thead>
-    <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Number 1</th>
-        <th scope="col">Number 2</th>
-        <th scope="col">Operation</th>
-        <th scope="col">Result </th>
-
-    </tr>
-    </thead>
-    <tbody>
-    {% for num in num_result %}
-    <tr>
-        <td><a href="view/{{num.id}}">{{ num.id }}</a></td>
-        <td> {{ num.num1 }}</td>
-        <td> {{ num.num2 }}</td>
-        <td> {{ num.operation }}</td>
-        <td> {{ num.result}}</td>
-
-
-
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
+</main>
 {% endblock %}
+
+
+
+
