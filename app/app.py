@@ -38,26 +38,26 @@ colors = [
 
 # ------------------ LOGIN --------------------
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@app.route('/', methods=['GET', 'POST'])
+def index():
     error = None
     if request.method == 'POST':
         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
             error = 'Invalid Credentials. Please try again.'
         else:
-            return redirect(url_for('index'))
-    return render_template('login.html', error=error)
+            return redirect(url_for('home'))
+    return render_template('index.html', error=error)
 
 # ------------------ POSTS --------------------
 
-@app.route('/', methods=['GET'])
-def index():
+@app.route('/home', methods=['GET'])
+def home():
     bar_values = values
     bar_labels = labels
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
-    return render_template('index.html', title='Home', num_result=result, labels=bar_labels, values=bar_values)
+    return render_template('home.html', title='Home', num_result=result, labels=bar_labels, values=bar_values)
 
 @app.route('/view/<int:num_id>', methods=['GET'])
 def record_view(num_id):
