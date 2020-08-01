@@ -25,7 +25,7 @@ table, th, td {
   border: 1px solid black;
 }
 table.center {
-  margin-left: auto;
+  margin-left: 5%;
   margin-right: auto;
 }
 </style>
@@ -123,6 +123,34 @@ new Chartist.Bar('.ct-chart', data, options);
     {% endfor %}
     </tbody>
 </table>
+
+
+<form action="/person/new" method="POST">
+    <div class="row">
+        <div class="col">
+            <label for="person_num">Person_Number</label>
+            <input id="person_num" type="text" class="form-control" placeholder="Person Number" name="person_num">
+        </div>
+        <div class="col">
+            <label for="height">Height</label>
+            <input id="height" t ype="text" class="form-control" placeholder="Height"
+                   name="height">
+        </div>
+        <div class="col">
+            <label for="weight">Weight</label>
+            <input id="weight" type="text" class="form-control" placeholder="Weight" name="weight">
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-success">ADD</button>
+
+</form>
+
+
+
+
+
 
 {% endblock %}
 <div id="footer">
