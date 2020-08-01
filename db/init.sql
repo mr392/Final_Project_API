@@ -12,3 +12,4 @@ CREATE TABLE IF NOT EXISTS numberImport (
    );
 INSERT INTO numberImport (id, num1, num2, operation, result) VALUES
     (1, 65.78, 5, "add",  70.78);
+
