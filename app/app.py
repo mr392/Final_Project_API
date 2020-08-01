@@ -120,10 +120,13 @@ def bar():
 def form_insert_post():
     cursor = mysql.get_db().cursor()
     inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'))
-    sql_insert_query = """INSERT INTO numberImport (num1, num2, operation) VALUES (%s, %s,%s) """
+
+    add_result = calc.Calculator.add(calc.Calculator(), request.form.get('num1'), request.form.get('num2'))
+    inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(add_result))
+
+    sql_insert_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s,%s, %s) """
     cursor.execute(sql_insert_query, inputData)
     mysql.get_db().commit()
     return redirect("/", code=302)
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
