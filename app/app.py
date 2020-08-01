@@ -115,14 +115,19 @@ def bar():
     result = cursor.fetchall()
     return render_template('bar_chart.html', title='Summary of Totals', max=100, num_result=result, labels=bar_labels, values=bar_values)
 
+#http requests
 
 @app.route('/', methods=['POST'])
 def form_insert_post():
     cursor = mysql.get_db().cursor()
     inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'))
 
-    add_result = calc.Calculator.add(calc.Calculator(), request.form.get('num1'), request.form.get('num2'))
-    inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(add_result))
+    if inputData[2] == "add":
+       add_result = calc.Calculator.add(calc.Calculator(), request.form.get('num1'), request.form.get('num2'))
+       inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(add_result))
+    else:
+        subtract_result = calc.Calculator.subtract(calc.Calculator(), request.form.get('num1'), request.form.get('num2'))
+        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(subtract_result))
 
     sql_insert_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s,%s, %s) """
     cursor.execute(sql_insert_query, inputData)
