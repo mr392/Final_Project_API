@@ -46,7 +46,7 @@ def index():
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
-    return render_template('bar_chart.html', title='Home', user=user, num_result=result, labels=bar_labels, values=bar_values)
+    return render_template('index.html', title='Home', user=user, num_result=result, labels=bar_labels, values=bar_values)
 
 
 
