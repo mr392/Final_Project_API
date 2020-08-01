@@ -65,7 +65,15 @@ def form_delete_post(num_id):
     mysql.get_db().commit()
     return redirect("/", code=302)
 
+#stats
 
+@app.route('/stats', methods=['GET'])
+def stat_index():
+
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM numberImport')
+    result = cursor.fetchall()
+    return render_template('stats_index.html', title='Home', num_result=result)
 
 
 #____________POSTMAN API's

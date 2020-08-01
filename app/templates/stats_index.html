@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+</style>
+
+
+
+<table class="left" style="width:900px">
+
+    <thead>
+
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Number 1</th>
+        <th scope="col">Number 2</th>
+        <th scope="col">Operation</th>
+        <th scope="col">Result </th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for num in num_result %}
+    <tr>
+
+        <td><a href="view/{{num.id}}">{{ num.id }}</a></td>
+        <td> {{ num.num1 }}</td>
+        <td> {{ num.num2 }}</td>
+        <td> {{ num.operation }}</td>
+        <td> {{ num.result}}</td>
+
+
+
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+
+{% endblock %}
+
+
+
