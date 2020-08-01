@@ -2,8 +2,8 @@ from Addition import addition
 from Subtraction import subtraction
 from Multiplication import multiplication
 from Division import division
-# from Calc.Squaring import squaring
-# from Calc.Squarerooting import squarerooting
+from Squaring import squaring
+from Squarerooting import squarerooting
 
 class Calculator:
     result = 0

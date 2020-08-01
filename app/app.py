@@ -105,6 +105,17 @@ def api_both() -> str:
         divide_result = calc.Calculator.divide(calc.Calculator(), content['num1'], content['num2'])
         inputData = (content['num1'], content['num2'], str(divide_result))
         sql_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s, "divide", %s) """
+
+    elif content['operation'] == "square":
+        square_result = calc.Calculator.square(calc.Calculator(), content['num1'])
+        inputData = (content['num1'], content['num2'], str(square_result))
+        sql_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s, "square", %s) """
+
+    elif content['operation'] == "sqrt":
+        sqrt_result = calc.Calculator.squareroot(calc.Calculator(), content['num1'])
+        inputData = (content['num1'], content['num2'], str(sqrt_result))
+        sql_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s, "sqrt", %s) """
+
     else:
         print("Sorry information is missing!")
 
@@ -143,9 +154,30 @@ def form_insert_post():
     if inputData[2] == "add":
        add_result = calc.Calculator.add(calc.Calculator(), request.form.get('num1'), request.form.get('num2'))
        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(add_result))
+
+    elif inputData[2] == "multiply":
+        multiply_result = calc.Calculator.multiply(calc.Calculator(), request.form.get('num1'), request.form.get('num2'))
+        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(multiply_result))
+
+    elif inputData[2] == "divide":
+        multiply_result = calc.Calculator.divide(calc.Calculator(), request.form.get('num1'), request.form.get('num2'))
+        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(multiply_result))
+
+    elif inputData[2] == "square":
+        square_result = calc.Calculator.square(calc.Calculator(), request.form.get('num1'))
+        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(square_result))
+
+    elif inputData[2] == "sqrt":
+        sqrt_result = calc.Calculator.squareroot(calc.Calculator(), request.form.get('num1'))
+        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(sqrt_result))
+
     else:
         subtract_result = calc.Calculator.subtract(calc.Calculator(), request.form.get('num1'), request.form.get('num2'))
         inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(subtract_result))
+
+
+
+
 
     sql_insert_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s,%s, %s) """
     cursor.execute(sql_insert_query, inputData)
