@@ -5,15 +5,15 @@
     <h5 class="card-title">Calculation # {{ num_result.id }}</h5>
 
     <ul class="list-group list-group-flush">
-        <li class="list-group-item">Height: {{ num_result.num1 }}</li>
-        <li class="list-group-item">Weight: {{ num_result.num2 }}</li>
-        <li class="list-group-item">Weight: {{ num_result.operation }}</li>
-        <li class="list-group-item">Weight: {{ num_result.result }}</li>
+        <li class="list-group-item">First Number: {{ num_result.num1 }}</li>
+        <li class="list-group-item">Second Number: {{ num_result.num2 }}</li>
+        <li class="list-group-item">Operation: {{ num_result.operation }}</li>
+        <li class="list-group-item">Result: {{ num_result.result }}</li>
 
     </ul>
 
 </div>
-<form action="/delete/{{num_result}}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>
+<form action="/delete/{{num_result.id}}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>
 
 
 {% endblock %}

@@ -57,6 +57,17 @@ def record_view(num_id):
     return render_template('view.html', title='View Form', num_result=result[0])
 
 
+@app.route('/delete/<int:num_id>', methods=['POST'])
+def form_delete_post(num_id):
+    cursor = mysql.get_db().cursor()
+    sql_delete_query = """DELETE FROM numberImport WHERE id = %s """
+    cursor.execute(sql_delete_query, num_id)
+    mysql.get_db().commit()
+    return redirect("/", code=302)
+
+
+
+
 #____________POSTMAN API's
 
 
