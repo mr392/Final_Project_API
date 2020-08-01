@@ -8,6 +8,7 @@ table, th, td {
 }
 
 .left {
+  top: 700px;
   position: absolute;
   left: 25px;
   width: 300px;
@@ -16,6 +17,7 @@ table, th, td {
 }
 
 .right {
+    top: 700px;
   position: absolute;
   right: 300px;
   width: 600px;
@@ -30,15 +32,33 @@ table, th, td {
         margin-right: 50%;
 
     }
+#chart1 {
+    top: 100px;
+    width: 800px;
+    height: 600px;
+    position: absolute;
+    left: 5px;
+    right: 20%;
+}
+
+#chart2 {
+    top: 100px;
+    width: 800px;
+    height: 600px;
+    position: absolute;
+    right: 10px;
+    left: 62%;
+
+}
 </style>
 
 
+<div class="ct-chart ct-golden-section" id="chart1"></div>
+<div class="ct-chart ct-golden-section" id="chart2"></div>
 
-<div class="ct-chart"> </div>
 <script>
-
-
-var data = {
+  // Initialize a Line chart in the container with the ID chart1
+    var data = {
   // A labels array that can contain any sort of values
   labels: [{% for num in num_result %}
                "{{ num.id }}",
@@ -51,21 +71,15 @@ var data = {
   ]
 };
 
-// As options we currently only set a static size of 300x200 px. We can also omit this and use aspect ratio containers
-// as you saw in the previous example
-var options = {
-  width: 900,
-  height: 700
-};
 
-// Create a new line chart object where as first parameter we pass in a selector
-// that is resolving to our chart container element. The Second parameter
-// is the actual data object. As a third parameter we pass in our custom options.
-new Chartist.Bar('.ct-chart', data, options);
+
+  new Chartist.Bar('#chart1', data);
+  new Chartist.Line('#chart2', data);
+
+
 
 
 </script>
-
 
 <table class="left" style="width:900px">
     <thead>
