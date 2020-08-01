@@ -2,18 +2,18 @@
 {% block content %}
 
 <div class="card" class="m-5 p-2">
-    <h5 class="card-title">Person # {{ person.person_num }}</h5>
+    <h5 class="card-title">Calculation # {{ num_result.id }}</h5>
 
     <ul class="list-group list-group-flush">
-        <li class="list-group-item">Height: {{ person.Height }}</li>
-        <li class="list-group-item">Weight: {{ person.Weight }}</li>
+        <li class="list-group-item">Height: {{ num_result.num1 }}</li>
+        <li class="list-group-item">Weight: {{ num_result.num2 }}</li>
+        <li class="list-group-item">Weight: {{ num_result.operation }}</li>
+        <li class="list-group-item">Weight: {{ num_result.result }}</li>
 
     </ul>
-    <div class="card-body">
-        <a href="/edit/{{person.person_num}}" class="card-link btn btn-primary">edit</a>
-    </div>
+
 </div>
-<form action="/delete/{{person.person_num}}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>
+<form action="/delete/{{num_result}}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>
 
 
 {% endblock %}

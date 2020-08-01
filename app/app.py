@@ -19,7 +19,7 @@ mysql.init_app(app)
 
 
 
-
+# - for old bar charts....delete when no longer needed
 labels = [
     'JAN', 'FEB', 'MAR', 'APR',
     'MAY', 'JUN', 'JUL', 'AUG',
@@ -37,6 +37,7 @@ colors = [
     "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
     "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
 
+# -------------------------------------------
 
 @app.route('/', methods=['GET'])
 def index():
@@ -48,6 +49,12 @@ def index():
     result = cursor.fetchall()
     return render_template('index.html', title='Home', user=user, num_result=result, labels=bar_labels, values=bar_values)
 
+@app.route('/view/<int:num_id>', methods=['GET'])
+def record_view(num_id):
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM numberImport WHERE id=%s', num_id)
+    result = cursor.fetchall()
+    return render_template('view.html', title='View Form', num_result=result[0])
 
 
 #____________POSTMAN API's
