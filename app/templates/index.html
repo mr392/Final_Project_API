@@ -8,7 +8,7 @@ table, th, td {
 }
 
 .left {
-  top: 700px;
+  top: 800px;
   position: absolute;
   left: 25px;
   width: 300px;
@@ -17,7 +17,7 @@ table, th, td {
 }
 
 .right {
-    top: 700px;
+    top: 800px;
   position: absolute;
   right: 300px;
   width: 600px;
@@ -33,7 +33,7 @@ table, th, td {
 
     }
 #chart1 {
-    top: 100px;
+    top: 125px;
     width: 800px;
     height: 600px;
     position: absolute;
@@ -42,7 +42,7 @@ table, th, td {
 }
 
 #chart2 {
-    top: 100px;
+    top: 125px;
     width: 800px;
     height: 600px;
     position: absolute;
@@ -50,6 +50,22 @@ table, th, td {
     left: 62%;
 
 }
+
+.lt {
+    width: auto;
+    top: 100px;
+
+    text-align: left ;
+
+}
+.rt {
+    top: 100px;
+    vertical-align: top ;
+    text-align: center;
+
+}
+
+
 </style>
 
 
@@ -82,6 +98,16 @@ table, th, td {
 
 </script>
 
+
+
+<div class="lt">
+    <h1>Result Chart and Table</h1>
+    <div class="rt">
+    <h1>Trend Chart</h1>
+</div>
+</div>
+
+
 <table class="left" style="width:900px">
 
     <thead>
@@ -111,6 +137,8 @@ table, th, td {
     {% endfor %}
     </tbody>
 </table>
+
+
 
 <div class="right">
    <form action="/" method="POST">
