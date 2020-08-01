@@ -1,21 +1,29 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
-<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+
 <style>
 table, th, td {
   border: 1px solid black;
 }
-table.center {
-  margin-left: 5%;
-  margin-right: auto;
+
+.left {
+  position: absolute;
+  left: 25px;
+  width: 300px;
+  border: 3px solid #73AD21;
+  padding: 10px;
+}
+
+.right {
+  position: absolute;
+  right: 300px;
+  width: 600px;
+  border: 3px solid #73AD21;
+  padding: 10px;
 }
 
 
-body {
-        background-color: #f0e6fa;
-    }
 .row2 {
 
         margin-left: 5%;
@@ -25,7 +33,7 @@ body {
 </style>
 
 
-<center>
+
 <div class="ct-chart"> </div>
 <script>
 
@@ -57,9 +65,9 @@ new Chartist.Bar('.ct-chart', data, options);
 
 
 </script>
-</center>
 
-<table class="center" style="width:900px">
+
+<table class="left" style="width:900px">
     <thead>
     <tr>
         <th scope="col">ID</th>
@@ -87,8 +95,8 @@ new Chartist.Bar('.ct-chart', data, options);
     </tbody>
 </table>
 
-
-<form action="/" method="POST">
+<div class="right">
+   <form action="/" method="POST">
 
         <div class="row2">
             <label for="num1">First Number</label>
@@ -103,13 +111,13 @@ new Chartist.Bar('.ct-chart', data, options);
             <label for="operation">Operation</label>
             <input id="operation" type="text" class="form-control" placeholder="Operation" name="operation">
         </div>
-
+       <br>
 
 
     <button type="submit" class="btn btn-success">Calculate</button>
 
-</form>
-
+   </form>
+</div>
 {% endblock %}
 
 
