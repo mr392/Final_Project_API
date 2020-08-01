@@ -45,7 +45,7 @@ def login():
         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
             error = 'Invalid Credentials. Please try again.'
         else:
-            return redirect(url_for('home'))
+            return redirect(url_forv('index'))
     return render_template('login.html', error=error)
 
 # ------------------ POSTS --------------------
@@ -54,11 +54,10 @@ def login():
 def index():
     bar_values = values
     bar_labels = labels
-    user = {'username': 'Mike'}
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
-    return render_template('index.html', title='Home', user=user, num_result=result, labels=bar_labels, values=bar_values)
+    return render_template('index.html', title='Home', num_result=result, labels=bar_labels, values=bar_values)
 
 @app.route('/view/<int:num_id>', methods=['GET'])
 def record_view(num_id):
@@ -149,7 +148,6 @@ def api_delete(id) -> str:
 def bar():
     bar_labels=labels
     bar_values=values
-    user = {'username': 'Mike'}
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
