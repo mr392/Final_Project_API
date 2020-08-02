@@ -20,35 +20,18 @@ mysql.init_app(app)
 
 
 
-# - for old bar charts....delete when no longer needed
-labels = [
-    'JAN', 'FEB', 'MAR', 'APR',
-    'MAY', 'JUN', 'JUL', 'AUG',
-    'SEP', 'OCT', 'NOV', 'DEC'
-]
 
-values = [
-    967.67, 1190.89, 1079.75, 1349.19,
-    2328.91, 2504.28, 2873.83, 4764.87,
-    4349.29, 6458.30, 9907, 16297
-]
-
-colors = [
-    "#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA",
-    "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
-    "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
 
 # -------------------------------------------
 
 @app.route('/', methods=['GET'])
 def index():
-    bar_values = values
-    bar_labels = labels
+
     user = {'username': 'Mike'}
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
-    return render_template('index.html', title='Home', user=user, num_result=result, labels=bar_labels, values=bar_values)
+    return render_template('index.html', title='Home', user=user, num_result=result)
 
 @app.route('/view/<int:num_id>', methods=['GET'])
 def record_view(num_id):
@@ -240,7 +223,44 @@ def form_stat_post():
     mysql.get_db().commit()
     return redirect("/stats", code=302)
 
+  #---stats postman api
+@app.route('/api/stats', methods=['GET'])
+def api_stats_browse() -> str:
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM statsImport')
+    result = cursor.fetchall()
+    json_result = json.dumps(result);
+    resp = Response(json_result, status=200, mimetype='application/json')
+    return resp
 
+
+
+@app.route('/api/stats', methods=['POST'])
+def api_stats_post() -> str:
+    cursor = mysql.get_db().cursor()
+    content = request.json
+    inputData = (content['num1'], content['num2'], content['num3'], content['num4'],
+                 content['num5'], content['num6'], content['operation'])
+
+    if content['operation'] == 'mean':
+       mean_result = stats.Statistics.get_mean(stats.Statistics(), inputData[0:5])
+       inputData = (content['num1'], content['num2'], content['num3'], content['num4'],
+                 content['num5'], content['num6'], str(mean_result))
+       sql_query = """INSERT INTO statsImport (num1, num2, num3, num4, num5, num6, operation, result) VALUES (%s,%s,%s,%s,%s,%s,'mean',%s) """
+
+    elif content['operation'] == 'median':
+        median_result = stats.Statistics.get_median(stats.Statistics(), inputData[0:5])
+        inputData = (content['num1'], content['num2'], content['num3'], content['num4'],
+                     content['num5'], content['num6'], str(median_result))
+        sql_query = """INSERT INTO statsImport (num1, num2, num3, num4, num5, num6, operation, result) VALUES (%s,%s,%s,%s,%s,%s,'median',%s) """
+
+
+
+
+    cursor.execute(sql_query, inputData)
+    mysql.get_db().commit()
+    resp = Response(status=201, mimetype='application/json')
+    return resp
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
