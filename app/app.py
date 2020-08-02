@@ -65,15 +65,7 @@ def form_delete_post(num_id):
     mysql.get_db().commit()
     return redirect("/", code=302)
 
-#stats
 
-@app.route('/stats', methods=['GET'])
-def stat_index():
-
-    cursor = mysql.get_db().cursor()
-    cursor.execute('SELECT * FROM numberImport')
-    result = cursor.fetchall()
-    return render_template('stats_index.html', title='Home', num_result=result)
 
 
 #____________POSTMAN API's
@@ -184,12 +176,24 @@ def form_insert_post():
         inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(subtract_result))
 
 
-
-
-
     sql_insert_query = """INSERT INTO numberImport (num1, num2, operation, result) VALUES (%s, %s,%s, %s) """
     cursor.execute(sql_insert_query, inputData)
     mysql.get_db().commit()
     return redirect("/", code=302)
+
+#stats
+
+@app.route('/stats', methods=['GET'])
+def stat_index():
+
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM numberImport')
+    result = cursor.fetchall()
+    return render_template('stats_index.html', title='Home', num_result=result)
+
+
+
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

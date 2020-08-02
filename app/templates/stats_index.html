@@ -2,13 +2,82 @@
 {% block content %}
 
 <style>
-table, th, td {
-  border: 1px solid black;
+#main_table {
+
+  top: 800px;
+  position: absolute;
+  left: 25px;
+
+  border: 3px solid #73AD21;
+  padding: 10px;
+}
+.entry {
+
+  position: absolute;
+  left: 25px;
+  width: 600px;
+  border: 3px solid #73AD21;
+  padding: 10px;
 }
 </style>
 
 
 
+<div class="entry">
+   <form action="/" method="POST">
+       <h1>Enter Calculations here </h1>
+        <div class="row2">
+            <label for="num1">First Number</label>
+            <input id="num1" type="text" class="form-control" placeholder="First Number" name="num1">
+        </div>
+        <div class="row2">
+            <label for="num2">Second Number</label>
+            <input id="num2" type="text" class="form-control" placeholder="Second Number"
+                   name="num2">
+        </div>
+
+       <div class="row2">
+            <label for="num3">Third Number</label>
+            <input id="num3" type="text" class="form-control" placeholder="Third Number"
+                   name="num3">
+        </div>
+
+       <div class="row2">
+            <label for="num4">Fourth Number</label>
+            <input id="num4" type="text" class="form-control" placeholder="Fourth Number"
+                   name="num4">
+        </div>
+
+       <div class="row2">
+            <label for="num5">Fifth Number</label>
+            <input id="num5" type="text" class="form-control" placeholder="Fifth Number"
+                   name="num5">
+        </div>
+
+       <div class="row2">
+            <label for="num6">Sixth Number</label>
+            <input id="num6" type="text" class="form-control" placeholder="Sixth Number"
+                   name="num6">
+        </div>
+
+       <div class="row2">
+         <label for="operation">Select Operation</label>
+         <select id="operation" class="form-control" name="operation">
+            <option value = "add" selected>Mean</option>
+
+         </select>
+
+        </div>
+       <br>
+
+
+    <button type="submit" class="btn btn-success">Calculate</button>
+
+   </form>
+
+</div>
+
+<div id="main_table">
 <table class="left" style="width:900px">
 
     <thead>
@@ -17,18 +86,26 @@ table, th, td {
         <th scope="col">ID</th>
         <th scope="col">Number 1</th>
         <th scope="col">Number 2</th>
+        <th scope="col">Number 3</th>
+        <th scope="col">Number 4</th>
+        <th scope="col">Number 5</th>
+        <th scope="col">Number 6</th>
         <th scope="col">Operation</th>
         <th scope="col">Result </th>
 
     </tr>
     </thead>
     <tbody>
-    {% for num in num_result %}
+    {% for num in stat_result %}
     <tr>
 
         <td><a href="view/{{num.id}}">{{ num.id }}</a></td>
         <td> {{ num.num1 }}</td>
         <td> {{ num.num2 }}</td>
+        <td> {{ num.num3 }}</td>
+        <td> {{ num.num4 }}</td>
+        <td> {{ num.num5 }}</td>
+        <td> {{ num.num6 }}</td>
         <td> {{ num.operation }}</td>
         <td> {{ num.result}}</td>
 
@@ -38,8 +115,7 @@ table, th, td {
     {% endfor %}
     </tbody>
 </table>
-
-
+</div>
 
 {% endblock %}
 
