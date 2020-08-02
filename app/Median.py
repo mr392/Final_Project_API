@@ -1,11 +1,11 @@
-from Calc.Addition import addition
-from Calc.Subtraction import subtraction
-from Calc.Division import division
+from Addition import addition
+from Subtraction import subtraction
+from Division import division
 
 
 
 def median(data):
-    data.sort()
+    #data.sort()
 
     numValues = len(data)
     indexValues = int(subtraction(1, numValues))

@@ -1,5 +1,5 @@
-from Calc.Addition import addition
-from Calc.Division import division
+from Addition import addition
+from Division import division
 
 
 
