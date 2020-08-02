@@ -161,8 +161,8 @@ def form_insert_post():
         inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(multiply_result))
 
     elif inputData[2] == "divide":
-        multiply_result = calc.Calculator.divide(calc.Calculator(), request.form.get('num1'), request.form.get('num2'))
-        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(multiply_result))
+        divide_result = calc.Calculator.divide(calc.Calculator(), request.form.get('num2'), request.form.get('num1'))
+        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('operation'), str(divide_result))
 
     elif inputData[2] == "square":
         square_result = calc.Calculator.square(calc.Calculator(), request.form.get('num1'))
@@ -195,10 +195,12 @@ def stat_index():
 @app.route('/stats', methods=['Post'])
 def form_stat_post():
     cursor = mysql.get_db().cursor()
-    inputData = inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'),request.form.get('num4'),request.form.get('num5'),request.form.get('num6'), request.form.get('operation'))
+    inputData = inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'),request.form.get('num4'),request.form.get('num5'),request.form.get('num6'))
+
+    print(inputData)
 
 
-    mean_result = stats.Statistics.get_mean(stats.Statistics(),inputData[0:5])
+    mean_result = stats.Statistics.get_mean(stats.Statistics(),inputData)
     inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'),request.form.get('num4'),request.form.get('num5'),request.form.get('num6'), request.form.get('operation'), str(mean_result))
 
     sql_insert_query = """INSERT INTO statsImport (num1, num2, num3, num4, num5, num6, operation, result) VALUES (%s, %s,%s, %s, %s, %s, %s, %s) """
