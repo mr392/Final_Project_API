@@ -237,7 +237,7 @@ def stats_delete_post(num_id):
     sql_delete_query = """DELETE FROM statsImport WHERE id = %s """
     cursor.execute(sql_delete_query, num_id)
     mysql.get_db().commit()
-    return redirect("/", code=302)
+    return redirect("/stats", code=302)
 
 
 
