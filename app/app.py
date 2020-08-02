@@ -254,6 +254,17 @@ def api_stats_post() -> str:
                      content['num5'], content['num6'], str(median_result))
         sql_query = """INSERT INTO statsImport (num1, num2, num3, num4, num5, num6, operation, result) VALUES (%s,%s,%s,%s,%s,%s,'median',%s) """
 
+    elif content['operation'] == 'deviation':
+        deviation_result = stats.Statistics.get_standard_deviation(stats.Statistics(), inputData[0:5])
+        inputData = (content['num1'], content['num2'], content['num3'], content['num4'],
+                     content['num5'], content['num6'], str(deviation_result))
+        sql_query = """INSERT INTO statsImport (num1, num2, num3, num4, num5, num6, operation, result) VALUES (%s,%s,%s,%s,%s,%s,'deviation',%s) """
+
+    elif content['operation'] == 'variance':
+        variance_result = stats.Statistics.get_variance(stats.Statistics(), inputData[0:5])
+        inputData = (content['num1'], content['num2'], content['num3'], content['num4'],
+                     content['num5'], content['num6'], str(variance_result))
+        sql_query = """INSERT INTO statsImport (num1, num2, num3, num4, num5, num6, operation, result) VALUES (%s,%s,%s,%s,%s,%s,'variance',%s) """
 
 
 
