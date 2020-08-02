@@ -223,6 +223,19 @@ def form_stat_post():
     mysql.get_db().commit()
     return redirect("/stats", code=302)
 
+
+@app.route('/stats/view/<int:num_id>', methods=['GET'])
+def stat_record_view(num_id):
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM statsImport WHERE id=%s', num_id)
+    result = cursor.fetchall()
+    return render_template('stats_view.html', title='View Form', num_result=result[0])
+
+
+
+
+
+
   #---stats postman api
 @app.route('/api/stats', methods=['GET'])
 def api_stats_browse() -> str:
