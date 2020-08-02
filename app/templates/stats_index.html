@@ -19,6 +19,14 @@
   border: 3px solid #73AD21;
   padding: 10px;
 }
+
+#right_col {
+
+    position: absolute;
+    right: 10%;
+    width: 800px;
+
+}
 </style>
 
 
@@ -117,6 +125,42 @@
     </tbody>
 </table>
 </div>
+
+<div id="right_col">
+    <h1>Mean</h1>
+    <div class="ct-chart ct-golden-section" id="chart_mean"></div>
+
+
+
+<script>
+  // Initialize a Line chart in the container with the ID chart1
+    var data = {
+  // A labels array that can contain any sort of values
+  labels: [{% for stat in stat_result %}
+               "{{ stat.id }}",
+              {% endfor %}],
+  // Our series array that contains series objects or in this case series data arrays
+  series: [
+    [{% for stat in stat_result %}
+               "{{ stat.result }}",
+              {% endfor %}]
+  ]
+};
+
+
+
+  new Chartist.Bar('#chart_mean', data);
+
+
+
+</script>
+
+
+
+</div>
+
+
+
 
 {% endblock %}
 
