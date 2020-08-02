@@ -231,8 +231,13 @@ def stat_record_view(num_id):
     result = cursor.fetchall()
     return render_template('stats_view.html', title='View Form', num_result=result[0])
 
-
-
+@app.route('/stats_delete/<int:num_id>', methods=['POST'])
+def stats_delete_post(num_id):
+    cursor = mysql.get_db().cursor()
+    sql_delete_query = """DELETE FROM statsImport WHERE id = %s """
+    cursor.execute(sql_delete_query, num_id)
+    mysql.get_db().commit()
+    return redirect("/", code=302)
 
 
 
