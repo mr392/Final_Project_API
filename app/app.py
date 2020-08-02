@@ -5,6 +5,7 @@ from flask import render_template
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
 import Calculator as calc
+import Statistics as stats
 
 
 app = Flask(__name__)
@@ -191,8 +192,19 @@ def stat_index():
     result = cursor.fetchall()
     return render_template('stats_index.html', title='Stats', stat_result=result)
 
+@app.route('/stats', methods=['Post'])
+def form_stat_post():
+    cursor = mysql.get_db().cursor()
+    inputData = inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'),request.form.get('num4'),request.form.get('num5'),request.form.get('num6'), request.form.get('operation'))
 
 
+    mean_result = stats.Statistics.get_mean(stats.Statistics(), request.form.get('num1'), request.form.get('num2'), request.form.get('num3'),request.form.get('num4'),request.form.get('num5'),request.form.get('num6'), request.form.get('operation'))
+    inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'),request.form.get('num4'),request.form.get('num5'),request.form.get('num6'), request.form.get('operation'), str(mean_result))
+
+    sql_insert_query = """INSERT INTO statsImport (num1, num2, num3, num4, num5, num6, operation, result) VALUES (%s, %s,%s, %s, %s, %s, %s, %s) """
+    cursor.execute(sql_insert_query, inputData)
+    mysql.get_db().commit()
+    return redirect("/stats", code=302)
 
 
 if __name__ == '__main__':

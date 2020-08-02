@@ -27,5 +27,5 @@ CREATE TABLE IF NOT EXISTS statsImport (
     `result` NUMERIC(5, 2),
     PRIMARY KEY (`id`)
    );
-INSERT INTO numberImport (id, num1, num2, operation, result) VALUES
+INSERT INTO statsImport (num1, num2,num3,num4,num5,num6, operation, result) VALUES
     (1, 65.78, 5, 2.2, 9.0, 6.7,  "mean",  70.78);
