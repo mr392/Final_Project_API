@@ -1,7 +1,6 @@
 from typing import List, Dict
 import simplejson as json
-from flask import Flask, request, Response, redirect
-from flask import render_template
+from flask import Flask, request, Response, redirect, render_template, url_for
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
 import Calculator as calc
@@ -19,14 +18,15 @@ app.config['MYSQL_DATABASE_DB'] = 'numberData'
 mysql.init_app(app)
 
 
+# ------------------ LOGIN --------------------
 
 
+# ------------------ POSTS --------------------
 
-# -------------------------------------------
-
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
-
+    bar_values = values
+    bar_labels = labels
     user = {'username': 'Mike'}
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
@@ -122,7 +122,6 @@ def api_delete(id) -> str:
 def bar():
     bar_labels=labels
     bar_values=values
-    user = {'username': 'Mike'}
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
@@ -168,7 +167,9 @@ def form_insert_post():
 #stats
 
 @app.route('/stats', methods=['GET'])
-def stat_index():
+def stat_
+
+():
     cursor_all= mysql.get_db().cursor()
     cursor_all.execute('SELECT * FROM statsImport')
     result = cursor_all.fetchall()
