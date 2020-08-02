@@ -195,18 +195,23 @@ def stat_index():
 @app.route('/stats', methods=['Post'])
 def form_stat_post():
     cursor = mysql.get_db().cursor()
-    inputData = inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'),request.form.get('num4'),request.form.get('num5'),request.form.get('num6'))
+    inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'),request.form.get('num4'),request.form.get('num5'),request.form.get('num6'), request.form.get('operation'))
 
-    print(inputData)
+    if inputData[6] == "mean":
+        mean_result = stats.Statistics.get_mean(stats.Statistics(),inputData[0:5])
+        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'),request.form.get('num4'),request.form.get('num5'),request.form.get('num6'), request.form.get('operation'), str(mean_result))
+    elif inputData[6] == "median":
+        median_result = stats.Statistics.get_median(stats.Statistics(), inputData[0:5])
+        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'), request.form.get('num4'),request.form.get('num5'), request.form.get('num6'), request.form.get('operation'), str(median_result))
+    else:
+        pass
 
-
-    mean_result = stats.Statistics.get_mean(stats.Statistics(),inputData)
-    inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'),request.form.get('num4'),request.form.get('num5'),request.form.get('num6'), request.form.get('operation'), str(mean_result))
 
     sql_insert_query = """INSERT INTO statsImport (num1, num2, num3, num4, num5, num6, operation, result) VALUES (%s, %s,%s, %s, %s, %s, %s, %s) """
     cursor.execute(sql_insert_query, inputData)
     mysql.get_db().commit()
     return redirect("/stats", code=302)
+
 
 
 if __name__ == '__main__':

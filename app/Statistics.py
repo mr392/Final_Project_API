@@ -1,6 +1,6 @@
 from Calculator import Calculator
 from Mean import mean
-
+from Median import median
 
 
 
@@ -15,8 +15,8 @@ class Statistics(Calculator):
         self.result = mean(data)
         return self.result
 
-
-
-
-        self.result = sample_CI_width(confidence, width)
+    def get_median(self, data):
+        self.result = median(data)
         return self.result
+
+
