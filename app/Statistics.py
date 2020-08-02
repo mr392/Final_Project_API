@@ -1,6 +1,8 @@
 from Calculator import Calculator
 from Mean import mean
 from Median import median
+from Variance import variance
+from Standard_Deviation import standard_deviation
 
 
 
@@ -17,6 +19,10 @@ class Statistics(Calculator):
 
     def get_median(self, data):
         self.result = median(data)
+        return self.result
+
+    def get_standard_deviation(self, data):
+        self.result = standard_deviation(data)
         return self.result
 
 

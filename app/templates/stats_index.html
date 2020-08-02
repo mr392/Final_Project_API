@@ -71,8 +71,9 @@
        <div class="row2">
          <label for="operation">Select Operation</label>
          <select id="operation" class="form-control" name="operation">
-            <option value = "mean" selected>Mean</option>
+            <option value = "mean" >Mean</option>
              <option value = "median" >Median</option>
+             <option value = "deviation" >Deviation</option>
 
          </select>
 
@@ -156,7 +157,7 @@
 </script>
       <h1>Median</h1>
     <div class="ct-chart ct-golden-section" id="chart_median"></div>
-    <script>
+ <script>
  //Mean_Chart data
     var data = {
 
@@ -175,9 +176,42 @@
 
   new Chartist.Line('#chart_median', data);
 
+</script>
+
+<h1>Variance</h1>
+    <div class="ct-chart ct-golden-section" id="chart_variance"></div>
+
+<script>
+
+    <h1>Median</h1>
+    <div class="ct-chart ct-golden-section" id="chart_median"></div>
+ <script>
+ //Mean_Chart data
+    var data = {
+
+  labels: [{% for stat in deviation_count %}
+               "{{ stat.id }}",
+              {% endfor %}],
+
+  series: [
+    [{% for stat in deviation_count %}
+               "{{ stat.result }}",
+              {% endfor %}]
+  ]
+};
+
+
+
+  new Chartist.Line('#chart_deviation', data);
 
 
 </script>
+
+
+
+
+
+
 
 
 </div>

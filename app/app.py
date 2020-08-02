@@ -186,14 +186,22 @@ def form_insert_post():
 
 @app.route('/stats', methods=['GET'])
 def stat_index():
+    cursor_all= mysql.get_db().cursor()
+    cursor_all.execute('SELECT * FROM statsImport')
+    result = cursor_all.fetchall()
 
-    cursor = mysql.get_db().cursor()
-    cursor.execute('SELECT * FROM statsImport')
-    result = cursor.fetchall()
+
+    cursor_mean = mysql.get_db().cursor()
+    cursor_mean.execute('SELECT * FROM statsImport where operation = "mean"')
+    mean_result = cursor_mean.fetchall()
     cursor2 = mysql.get_db().cursor()
     cursor2.execute('SELECT * FROM statsImport where operation = "median"')
     median_result = cursor2.fetchall()
-    return render_template('stats_index.html', title='Stats', median_count=median_result, stat_result=result)
+    varcursor = mysql.get_db().cursor()
+    varcursor.execute('SELECT * FROM statsImport where operation = "deviation"')
+    variance_result = varcursor.fetchall()
+
+    return render_template('stats_index.html', title='Stats', deviation_count = variance_result, median_count=median_result, mean_count=mean_result, stat_result=result)
 
 @app.route('/stats', methods=['Post'])
 def form_stat_post():
@@ -206,6 +214,10 @@ def form_stat_post():
     elif inputData[6] == "median":
         median_result = stats.Statistics.get_median(stats.Statistics(), inputData[0:5])
         inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'), request.form.get('num4'),request.form.get('num5'), request.form.get('num6'), request.form.get('operation'), str(median_result))
+    elif inputData[6] == "deviation":
+        deviation_result = stats.Statistics.get_standard_deviation(stats.Statistics(), inputData[0:5])
+        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'), request.form.get('num4'),
+                     request.form.get('num5'), request.form.get('num6'), request.form.get('operation'), str(deviation_result))
     else:
         pass
 
