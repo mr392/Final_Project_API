@@ -128,13 +128,13 @@
 </div>
 
 <div id="right_col">
-    <h1>Mean</h1>
-    <div class="ct-chart ct-golden-section" id="chart_mean"></div>
+    <h1>Total</h1>
+    <div class="ct-chart ct-golden-section" id="chart_total"></div>
 
 
 
 <script>
- //Mean_Chart data
+ //Total data
     var data = {
 
   labels: [{% for stat in stat_result %}
@@ -150,15 +150,21 @@
 
 
 
-  new Chartist.Line('#chart_mean', data);
+  new Chartist.Line('#chart_total', data);
 
-
-//Median chart
 </script>
-      <h1>Median</h1>
+
+
+
+
+
+
+
+
+    <h1>Median</h1>
     <div class="ct-chart ct-golden-section" id="chart_median"></div>
  <script>
- //Mean_Chart data
+ //Median_Chart data
     var data = {
 
   labels: [{% for stat in median_count %}
@@ -179,12 +185,8 @@
 </script>
 
 <h1>Variance</h1>
-    <div class="ct-chart ct-golden-section" id="chart_variance"></div>
+<div class="ct-chart ct-golden-section" id="chart_deviation"></div>
 
-<script>
-
-    <h1>Median</h1>
-    <div class="ct-chart ct-golden-section" id="chart_median"></div>
  <script>
  //Mean_Chart data
     var data = {

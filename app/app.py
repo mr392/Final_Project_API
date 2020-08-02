@@ -194,14 +194,16 @@ def stat_index():
     cursor_mean = mysql.get_db().cursor()
     cursor_mean.execute('SELECT * FROM statsImport where operation = "mean"')
     mean_result = cursor_mean.fetchall()
+
     cursor2 = mysql.get_db().cursor()
     cursor2.execute('SELECT * FROM statsImport where operation = "median"')
     median_result = cursor2.fetchall()
-    varcursor = mysql.get_db().cursor()
-    varcursor.execute('SELECT * FROM statsImport where operation = "deviation"')
-    variance_result = varcursor.fetchall()
 
-    return render_template('stats_index.html', title='Stats', deviation_count = variance_result, median_count=median_result, mean_count=mean_result, stat_result=result)
+    devcursor = mysql.get_db().cursor()
+    devcursor.execute('SELECT * FROM statsImport where operation = "deviation"')
+    dev_result = devcursor.fetchall()
+
+    return render_template('stats_index.html', title='Stats', deviation_count = dev_result, median_count=median_result, mean_count=mean_result, stat_result=result)
 
 @app.route('/stats', methods=['Post'])
 def form_stat_post():
