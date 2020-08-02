@@ -187,9 +187,9 @@ def form_insert_post():
 def stat_index():
 
     cursor = mysql.get_db().cursor()
-    cursor.execute('SELECT * FROM numberImport')
+    cursor.execute('SELECT * FROM statsImport')
     result = cursor.fetchall()
-    return render_template('stats_index.html', title='Home', num_result=result)
+    return render_template('stats_index.html', title='Stats', stat_result=result)
 
 
 
