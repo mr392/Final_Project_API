@@ -74,6 +74,7 @@
             <option value = "mean" >Mean</option>
              <option value = "median" >Median</option>
              <option value = "deviation" >Deviation</option>
+             <option value = "variance" >Variance</option>
 
          </select>
 
@@ -188,7 +189,7 @@
 <div class="ct-chart ct-golden-section" id="chart_deviation"></div>
 
  <script>
- //Mean_Chart data
+ //deviation_Chart data
     var data = {
 
   labels: [{% for stat in deviation_count %}
@@ -209,9 +210,31 @@
 
 </script>
 
+<h1>Variance</h1>
+<div class="ct-chart ct-golden-section" id="chart_variance"></div>
+
+
+ <script>
+ //Variance_Chart data
+    var data = {
+
+  labels: [{% for stat in var_result %}
+               "{{ stat.id }}",
+              {% endfor %}],
+
+  series: [
+    [{% for stat in var_result %}
+               "{{ stat.result }}",
+              {% endfor %}]
+  ]
+};
 
 
 
+  new Chartist.Line('#chart_variance', data);
+
+
+</script>
 
 
 

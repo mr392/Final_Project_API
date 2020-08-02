@@ -195,15 +195,21 @@ def stat_index():
     cursor_mean.execute('SELECT * FROM statsImport where operation = "mean"')
     mean_result = cursor_mean.fetchall()
 
-    cursor2 = mysql.get_db().cursor()
-    cursor2.execute('SELECT * FROM statsImport where operation = "median"')
-    median_result = cursor2.fetchall()
+    median_cursor = mysql.get_db().cursor()
+    median_cursor.execute('SELECT * FROM statsImport where operation = "median"')
+    median_result = median_cursor.fetchall()
 
     devcursor = mysql.get_db().cursor()
     devcursor.execute('SELECT * FROM statsImport where operation = "deviation"')
     dev_result = devcursor.fetchall()
 
-    return render_template('stats_index.html', title='Stats', deviation_count = dev_result, median_count=median_result, mean_count=mean_result, stat_result=result)
+    var_cursor = mysql.get_db().cursor()
+    var_cursor.execute('SELECT * FROM statsImport where operation = "variance"')
+    var_result = var_cursor.fetchall()
+
+
+
+    return render_template('stats_index.html', title='Stats', deviation_count = dev_result, median_count=median_result, mean_count=mean_result, stat_result=result, var_result = var_result)
 
 @app.route('/stats', methods=['Post'])
 def form_stat_post():
@@ -220,6 +226,11 @@ def form_stat_post():
         deviation_result = stats.Statistics.get_standard_deviation(stats.Statistics(), inputData[0:5])
         inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'), request.form.get('num4'),
                      request.form.get('num5'), request.form.get('num6'), request.form.get('operation'), str(deviation_result))
+    elif inputData[6] == "variance":
+        variance_result = stats.Statistics.get_variance(stats.Statistics(), inputData[0:5])
+        inputData = (request.form.get('num1'), request.form.get('num2'), request.form.get('num3'), request.form.get('num4'),
+                     request.form.get('num5'), request.form.get('num6'), request.form.get('operation'), str(variance_result))
+
     else:
         pass
 

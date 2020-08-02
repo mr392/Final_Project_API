@@ -25,4 +25,8 @@ class Statistics(Calculator):
         self.result = standard_deviation(data)
         return self.result
 
+    def get_variance(self, data):
+        self.result = variance(data)
+        return self.result
+
 
