@@ -133,13 +133,13 @@
 
 
 <script>
-  // Initialize a Line chart in the container with the ID chart1
+ //Mean_Chart data
     var data = {
-  // A labels array that can contain any sort of values
+
   labels: [{% for stat in stat_result %}
                "{{ stat.id }}",
               {% endfor %}],
-  // Our series array that contains series objects or in this case series data arrays
+
   series: [
     [{% for stat in stat_result %}
                "{{ stat.result }}",
@@ -152,9 +152,32 @@
   new Chartist.Line('#chart_mean', data);
 
 
+//Median chart
+</script>
+      <h1>Median</h1>
+    <div class="ct-chart ct-golden-section" id="chart_median"></div>
+    <script>
+ //Mean_Chart data
+    var data = {
+
+  labels: [{% for stat in median_count %}
+               "{{ stat.id }}",
+              {% endfor %}],
+
+  series: [
+    [{% for stat in median_count %}
+               "{{ stat.result }}",
+              {% endfor %}]
+  ]
+};
+
+
+
+  new Chartist.Line('#chart_median', data);
+
+
 
 </script>
-
 
 
 </div>

@@ -190,7 +190,10 @@ def stat_index():
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM statsImport')
     result = cursor.fetchall()
-    return render_template('stats_index.html', title='Stats', stat_result=result)
+    cursor2 = mysql.get_db().cursor()
+    cursor2.execute('SELECT * FROM statsImport where operation = "median"')
+    median_result = cursor2.fetchall()
+    return render_template('stats_index.html', title='Stats', median_count=median_result, stat_result=result)
 
 @app.route('/stats', methods=['Post'])
 def form_stat_post():
