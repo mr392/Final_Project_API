@@ -273,5 +273,16 @@ def api_stats_post() -> str:
     resp = Response(status=201, mimetype='application/json')
     return resp
 
+@app.route('/api/stats/<int:id>', methods=['DELETE'])
+def api_stats_delete(id) -> str:
+    cursor = mysql.get_db().cursor()
+    sql_delete_query = """DELETE FROM statsImport WHERE id = %s """
+    cursor.execute(sql_delete_query, id)
+    mysql.get_db().commit()
+    resp = Response(status=210, mimetype='application/json')
+    return resp
+
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
