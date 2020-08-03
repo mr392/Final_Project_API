@@ -1,11 +1,14 @@
 from typing import List, Dict
 import simplejson as json
 from flask import Flask, request, Response, redirect
-from flask import render_template
+from flask import render_template, url_for
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
 import Calculator as calc
 import Statistics as stats
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 
 app = Flask(__name__)
@@ -19,19 +22,29 @@ app.config['MYSQL_DATABASE_DB'] = 'numberData'
 mysql.init_app(app)
 
 
-
+#____________LOGIN
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
+            error = 'Invalid Credentials. Please try again.'
+        else:
+            return redirect(url_for('home'))
+    return render_template('home.html', error=error)
 
 
 # _--------------------------------------------
 
-@app.route('/', methods=['GET'])
-def index():
-
+@app.route('/home', methods=['GET'])
+def home():
     user = {'username': 'Mike'}
+    bar_values = values
+    bar_labels = labels
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
-    return render_template('index.html', title='Home', user=user, num_result=result)
+    return render_template('home.html', title='Home', num_result=result, labels=bar_labels, values=bar_values)
 
 @app.route('/view/<int:num_id>', methods=['GET'])
 def record_view(num_id):
