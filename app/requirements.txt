@@ -1,5 +1,6 @@
 Flask
 flask-mysql
+flask-login
 flask-sqlalchemy
 simplejson
 flask-wtf
