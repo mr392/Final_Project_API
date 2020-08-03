@@ -64,7 +64,9 @@ def login():
 def signup():
     form = RegisterForm()
     if form.validate_on_submit():
-        return '<h1>' + form.email.data + ' ' + form.username.data + ' ' + form.password.data + '</h1>'
+        new_user = User(username=form.username.data, email=form.email.data, password=form.password.data)
+        db.session.add(new_user)
+        db.session.commit()
     return render_template('signup.html', form=form)
 
 @app.route('/logout')
