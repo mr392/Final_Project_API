@@ -1,3 +1,11 @@
 Flask
 flask-mysql
+flask-login
+flask-sqlalchemy
 simplejson
+flask-wtf
+wtforms
+flask-bootstrap
+email-validator
+Calculator
+Statistics

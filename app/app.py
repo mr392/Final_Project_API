@@ -1,14 +1,28 @@
 from typing import List, Dict
 import simplejson as json
-from flask import Flask, request, Response, redirect
-from flask import render_template
+from flask import Flask, request, Response, redirect, render_template, url_for
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
 import Calculator as calc
 import Statistics as stats
 
+from flask_wtf import FlaskForm
+from flask_bootstrap import Bootstrap
+from wtforms import StringField, PasswordField, BooleanField
+from wtforms.validators import InputRequired, Email, Length
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./database.db'
+Bootstrap(app)
+db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 mysql = MySQL(cursorclass=DictCursor)
 
 app.config['MYSQL_DATABASE_HOST'] = 'db'
@@ -19,19 +33,66 @@ app.config['MYSQL_DATABASE_DB'] = 'numberData'
 mysql.init_app(app)
 
 
+#____________USER DATABASE, INDEX, LOGIN, SIGNUP, AND LOGOUT
 
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(50), unique=True)
+    username = db.Column(db.String(15), unique=True)
+    password = db.Column(db.String(80), unique=True)
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
-# --------------------------------------------
+class LoginForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+    remember = BooleanField('remember me')
+
+class RegisterForm(FlaskForm):
+    email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
 
 @app.route('/', methods=['GET'])
+@login_required
 def index():
-
-    user = {'username': 'Mike'}
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
-    return render_template('index.html', title='Home', user=user, num_result=result)
+    return render_template('index.html', name=current_user.username, num_result=result)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                return redirect(url_for('index'))
+        return '<h1>Invalid username or password</h1>'
+    return render_template('login.html', form=form)
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        hashed_password = generate_password_hash(form.password.data, method='sha256')
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('signup.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+# _--------------------------------------------
 
 @app.route('/view/<int:num_id>', methods=['GET'])
 def record_view(num_id):
@@ -122,7 +183,6 @@ def api_delete(id) -> str:
 def bar():
     bar_labels=labels
     bar_values=values
-    user = {'username': 'Mike'}
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
@@ -300,7 +360,6 @@ def api_stats_delete(id) -> str:
     resp = Response(status=210, mimetype='application/json')
     return resp
 
-
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    db.create_all()
+    app.run(debug=True, host='0.0.0.0', port=5000)
