@@ -1,14 +1,12 @@
 from typing import List, Dict
 import simplejson as json
-from flask import Flask, request, Response, redirect
 from flask import render_template, url_for, flash, session, abort
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
 import Calculator as calc
 import Statistics as stats
-import os
-from tabledef import *
 
+from flask import Flask
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField, BooleanField
