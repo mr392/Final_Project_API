@@ -8,10 +8,10 @@ table, th, td {
 }
 
 .left {
-  top: 800px;
+  top: 600px;
   position: absolute;
   left: 25px;
-  width: 300px;
+  width: 350px;
   border: 3px solid #73AD21;
   padding: 10px;
 }
@@ -66,81 +66,56 @@ table, th, td {
 }
 
 
+#main_table {
+
+  top: 700px;
+  position: absolute;
+  left: 25px;
+  width:750px;
+
+  border: 3px solid #73AD21;
+  padding: 10px;
+}
+.entry {
+
+  position: absolute;
+  left: 25px;
+  width: 300px;
+  border: 3px solid #73AD21;
+  padding: 10px;
+}
+
+#right_col {
+
+    position: absolute;
+    Left: 65%;
+    width: 475px;
+
+}
+
+#chart1 {
+    position: absolute;
+    Left: 45%;
+    height: 400px;
+    width: 475px;
+
+}
+
+#chart2 {
+    position: absolute;
+    top: 60%;
+    Left: 45%;
+    height: 400px;
+    width: 475px;
+
+
+}
+
+
+
 </style>
 
-
-<div class="ct-chart ct-golden-section" id="chart1"></div>
-
-<div class="ct-chart ct-golden-section" id="chart2"></div>
-
-<script>
-  // Initialize a Line chart in the container with the ID chart1
-    var data = {
-  // A labels array that can contain any sort of values
-  labels: [{% for num in num_result %}
-               "{{ num.id }}",
-              {% endfor %}],
-  // Our series array that contains series objects or in this case series data arrays
-  series: [
-    [{% for num in num_result %}
-               "{{ num.result }}",
-              {% endfor %}]
-  ]
-};
-
-
-
-  new Chartist.Bar('#chart1', data);
-  new Chartist.Line('#chart2', data);
-
-
-
-
-</script>
-
-
-
-<div class="lt">
-    <h1>Result Chart and Table</h1>
-    <div class="rt">
-    <h1>Trend Chart</h1>
-</div>
-</div>
-
-
-<table class="left" style="width:900px">
-
-    <thead>
-
-    <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Number 1</th>
-        <th scope="col">Number 2</th>
-        <th scope="col">Operation</th>
-        <th scope="col">Result </th>
-
-    </tr>
-    </thead>
-    <tbody>
-    {% for num in num_result %}
-    <tr>
-
-        <td><a href="view/{{num.id}}">{{ num.id }}</a></td>
-        <td> {{ num.num1 }}</td>
-        <td> {{ num.num2 }}</td>
-        <td> {{ num.operation }}</td>
-        <td> {{ num.result}}</td>
-
-
-
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-
-
-<div class="right">
+<div class="entry">
    <form action="/" method="POST">
        <h1>Enter Calculations here </h1>
         <div class="row2">
@@ -171,7 +146,87 @@ table, th, td {
 
    </form>
 </div>
+
+<div id="main_table ">
+<table class="left" >
+
+    <thead>
+
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Number 1</th>
+        <th scope="col">Number 2</th>
+        <th scope="col">Operation</th>
+        <th scope="col">Result </th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for num in num_result %}
+    <tr>
+
+        <td><a href="view/{{num.id}}">{{ num.id }}</a></td>
+        <td> {{ num.num1 }}</td>
+        <td> {{ num.num2 }}</td>
+        <td> {{ num.operation }}</td>
+        <td> {{ num.result}}</td>
+
+
+
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</div>
+
+<div id ="chart1">
+<div class="ct-chart ct-golden-section" id="chart1"></div>
+</div>
+
+<div id = "chart2">
+<div class="ct-chart ct-golden-section" id="chart2"></div>
+</div>
+
+
+
+
+<script>
+  // Initialize a Line chart in the container with the ID chart1
+    var data = {
+  // A labels array that can contain any sort of values
+  labels: [{% for num in num_result %}
+               "{{ num.id }}",
+              {% endfor %}],
+  // Our series array that contains series objects or in this case series data arrays
+  series: [
+    [{% for num in num_result %}
+               "{{ num.result }}",
+              {% endfor %}]
+  ]
+};
+
+
+
+  new Chartist.Bar('#chart1', data);
+
+
+  new Chartist.Line('#chart2', data);
+
+
+
+
+</script>
+
+
+
+
+
+
 {% endblock %}
+
+
+
 
 
 
