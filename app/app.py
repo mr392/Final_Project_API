@@ -8,6 +8,9 @@ import Calculator as calc
 import Statistics as stats
 from flask_sqlalchemy import SQLAlchemy
 import os
+from sqlalchemy.orm import sessionmaker
+from tabledef import *
+engine = create_engine('sqlite:///tutorial.db', echo=True)
 
 app = Flask(__name__)
 mysql = MySQL(cursorclass=DictCursor)
@@ -21,27 +24,6 @@ mysql.init_app(app)
 
 
 #____________LOGIN / LOGOUT
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    if not session.get('logged_in'):
-        return render_template('login.html')
-    else:
-        return "Welcome!"
-
-@app.route('/login', methods=['POST'])
-def do_admin_login():
-    if request.form['password'] == 'password' and request.form['username'] == 'admin':
-        session['logged_in'] = True
-    else:
-        flash('Wrong username or password!')
-    return home()
-
-@app.route('/logout')
-def logout():
-    session['logged_in'] = False
-    return home()
-
-# _--------------------------------------------
 
 @app.route('/', methods=['GET'])
 def index():
@@ -49,6 +31,21 @@ def index():
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
     return render_template('index.html', title='Home', num_result=result)
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/signup')
+def login():
+    return render_template('signup.html')
+
+@app.route('/logout')
+def logout():
+    session['logged_in'] = False
+    return home()
+
+# _--------------------------------------------
 
 @app.route('/view/<int:num_id>', methods=['GET'])
 def record_view(num_id):
