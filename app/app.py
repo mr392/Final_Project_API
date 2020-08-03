@@ -14,7 +14,7 @@ import email_validator
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Users/DOUG/Documents/NJIT/Final_Project_API/database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./database.db'
 Bootstrap(app)
 db = SQLAlchemy(app)
 mysql = MySQL(cursorclass=DictCursor)
