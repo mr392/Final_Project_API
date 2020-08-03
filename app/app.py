@@ -1,16 +1,13 @@
 from typing import List, Dict
 import simplejson as json
 from flask import Flask, request, Response, redirect
-from flask import render_template, url_for
+from flask import render_template, url_for, flash, session, abort
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
 import Calculator as calc
 import Statistics as stats
-
 from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
-
-
+import os
 
 app = Flask(__name__)
 mysql = MySQL(cursorclass=DictCursor)
@@ -132,7 +129,6 @@ def api_delete(id) -> str:
 def bar():
     bar_labels=labels
     bar_values=values
-    user = {'username': 'Mike'}
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
