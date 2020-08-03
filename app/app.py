@@ -3,8 +3,6 @@ import simplejson as json
 from flask import render_template, url_for, flash, session, abort
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
-import Calculator as calc
-import Statistics as stats
 
 from flask import Flask
 from flask_wtf import FlaskForm
@@ -18,7 +16,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/DOUG/Documents/NJIT/Final_Project_API/database.db'
 Bootstrap(app)
-db = SQLAlchemy
+db = SQLAlchemy(app)
 mysql = MySQL(cursorclass=DictCursor)
 
 app.config['MYSQL_DATABASE_HOST'] = 'db'
@@ -65,6 +63,7 @@ def signup():
         new_user = User(username=form.username.data, email=form.email.data, password=form.password.data)
         db.session.add(new_user)
         db.session.commit()
+        return '<h1>New user has been created!</h1>'
     return render_template('signup.html', form=form)
 
 @app.route('/logout')
@@ -343,5 +342,5 @@ def api_stats_delete(id) -> str:
 
 
 if __name__ == '__main__':
-    app.secret_key = os.urandom(12)
+    db.create_all()
     app.run(debug=True, host='0.0.0.0', port=5000)

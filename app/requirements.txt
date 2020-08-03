@@ -6,3 +6,5 @@ flask-wtf
 wtforms
 flask-bootstrap
 email-validator
+Calculator
+Statistics
