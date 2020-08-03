@@ -34,4 +34,6 @@ CREATE TABLE IF NOT EXISTS statsImport (
    );
 INSERT INTO statsImport (id, num1, num2,num3,num4,num5,num6, operation, result) VALUES
     (1, 1, 65.78, 5, 2.2, 9.0, 6.7, "mean",  70.78),
-    (2, 2, 3, 4, 5, 6, 7, "mean", 4);
+    (2, 2, 3, 4, 5, 6, 7, "mean", 4),
+    (3, 8, 4, 5, 6, 9, 52, "median", 6),
+    (4, 100, 125, 134, 155, 16, 160, "median", 155);
