@@ -20,25 +20,35 @@ app.config['MYSQL_DATABASE_DB'] = 'numberData'
 mysql.init_app(app)
 
 
-#____________LOGIN
+#____________LOGIN / LOGOUT
 @app.route('/', methods=['GET', 'POST'])
-def index():
-    error = None
-    if request.method == 'POST':
-        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
-            error = 'Invalid Credentials. Please try again.'
-        else:
-            return redirect(url_for('home'))
-    return render_template('index.html', error=error)
+def home():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return "Welcome!"
+
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+    if request.form['password'] == 'password' and request.form['username'] == 'admin':
+        session['logged_in'] = True
+    else:
+        flash('Wrong username or password!')
+    return home()
+
+@app.route('/logout')
+def logout():
+    session['logged_in'] = False
+    return home()
 
 # _--------------------------------------------
 
-@app.route('/home', methods=['GET'])
-def home():
+@app.route('/', methods=['GET'])
+def index():
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
-    return render_template('home.html', title='Home', num_result=result)
+    return render_template('index.html', title='Home', num_result=result)
 
 @app.route('/view/<int:num_id>', methods=['GET'])
 def record_view(num_id):
@@ -309,4 +319,5 @@ def api_stats_delete(id) -> str:
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.secret_key = os.urandom(12)
+    app.run(debug=True, host='0.0.0.0', port=5000)
