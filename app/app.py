@@ -6,13 +6,21 @@ from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
 import Calculator as calc
 import Statistics as stats
-from flask_sqlalchemy import SQLAlchemy
 import os
-from sqlalchemy.orm import sessionmaker
 from tabledef import *
-engine = create_engine('sqlite:///tutorial.db', echo=True)
+
+from flask_wtf import FlaskForm
+from flask_bootstrap import Bootstrap
+from wtforms import StringField, PasswordField, BooleanField
+from wtforms.validators import InputRequired, Email, Length
+from flask_sqlalchemy import SQLAlchemy
+import email_validator
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/DOUG/Documents/NJIT/Final_Project_API/database.db'
+Bootstrap(app)
+db = SQLAlchemy
 mysql = MySQL(cursorclass=DictCursor)
 
 app.config['MYSQL_DATABASE_HOST'] = 'db'
@@ -25,25 +33,44 @@ mysql.init_app(app)
 
 #____________LOGIN / LOGOUT
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(50), unique=True)
+    username = db.Column(db.String(15), unique=True)
+    password = db.Column(db.String(30), unique=True)
+
+class LoginForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=30)])
+    remember = BooleanField('remember me')
+
+class RegisterForm(FlaskForm):
+    email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=30)])
+
 @app.route('/', methods=['GET'])
 def index():
-    cursor = mysql.get_db().cursor()
-    cursor.execute('SELECT * FROM numberImport')
-    result = cursor.fetchall()
-    return render_template('index.html', title='Home', num_result=result)
+    return render_template('index.html')
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
+    return render_template('login.html', form=form)
 
-@app.route('/signup')
-def login():
-    return render_template('signup.html')
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        return '<h1>' + form.email.data + ' ' + form.username.data + ' ' + form.password.data + '</h1>'
+    return render_template('signup.html', form=form)
 
 @app.route('/logout')
 def logout():
     session['logged_in'] = False
-    return home()
+    return render_template('logout.html')
 
 # _--------------------------------------------
 
