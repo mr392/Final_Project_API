@@ -29,14 +29,12 @@ def index():
             error = 'Invalid Credentials. Please try again.'
         else:
             return redirect(url_for('home'))
-    return render_template('home.html', error=error)
-
+    return render_template('index.html', error=error)
 
 # _--------------------------------------------
 
 @app.route('/home', methods=['GET'])
 def home():
-    user = {'username': 'Mike'}
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
