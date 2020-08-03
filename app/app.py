@@ -1,10 +1,11 @@
 from typing import List, Dict
 import simplejson as json
-from flask import render_template, url_for, flash, session, abort, redirect
+from flask import Flask, request, Response, redirect, render_template, url_for
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
+import Calculator as calc
+import Statistics as stats
 
-from flask import Flask
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField, BooleanField
@@ -33,7 +34,7 @@ app.config['MYSQL_DATABASE_DB'] = 'numberData'
 mysql.init_app(app)
 
 
-#____________LOGIN / LOGOUT
+#____________USER DATABASE, INDEX, LOGIN, SIGNUP, AND LOGOUT
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -58,7 +59,10 @@ class RegisterForm(FlaskForm):
 @app.route('/', methods=['GET'])
 @login_required
 def index():
-    return render_template('index.html', name=current_user.username)
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM numberImport')
+    result = cursor.fetchall()
+    return render_template('index.html', name=current_user.username, num_result=result)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -81,7 +85,7 @@ def signup():
         new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        return '<h1>New user has been created!</h1>'
+        return redirect(url_for('login'))
     return render_template('signup.html', form=form)
 
 @app.route('/logout')
