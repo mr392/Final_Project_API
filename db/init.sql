@@ -14,6 +14,8 @@ INSERT INTO numberImport (id, num1, num2, operation, result) VALUES
     (1, 65.78, 5, "add",  70.78);
 
 
+
+
 CREATE TABLE IF NOT EXISTS statsImport (
 
     `id` INT AUTO_INCREMENT,
