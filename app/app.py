@@ -7,6 +7,9 @@ from pymysql.cursors import DictCursor
 import Calculator as calc
 import Statistics as stats
 
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
+
 
 
 app = Flask(__name__)
