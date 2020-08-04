@@ -40,6 +40,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(50), unique=True)
     username = db.Column(db.String(15), unique=True)
     password = db.Column(db.String(80), unique=True)
+    confirmed = db.Column(db.Boolean, nullable=False, default=False)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -80,7 +81,7 @@ def signup():
     form = RegisterForm()
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, confirmed=False)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
