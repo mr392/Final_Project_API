@@ -13,6 +13,9 @@ from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask import flash
+
+from token import generate_confirmation_token, confirm_token
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
@@ -84,8 +87,26 @@ def signup():
         new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, confirmed=False)
         db.session.add(new_user)
         db.session.commit()
+        token = generate_confirmation_token(new_user.email)
         return redirect(url_for('login'))
     return render_template('signup.html', form=form)
+
+@app.route('/confirm/<token>')
+@login_required
+def confirm_email(token):
+    try:
+        email = confirm_token(token)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    new_user = User.query.filter_by(email=email).first_or_404()
+    if new_user.confirmed:
+        flash('Account already confirmed. Please login', 'success')
+    else:
+        new_user.confirmed = True
+        db.session.add(User)
+        db.session.commit()
+        flash('You have confirmed your account. Thanks!', 'success')
+    return redirect(url_for('index'))
 
 @app.route('/logout')
 @login_required
