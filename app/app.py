@@ -19,7 +19,6 @@ from email import send_email
 from token import generate_confirmation_token, confirm_token
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./database.db'
 Bootstrap(app)
 db = SQLAlchemy(app)
