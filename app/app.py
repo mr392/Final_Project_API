@@ -84,10 +84,10 @@ def signup():
     form = RegisterForm()
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, confirmed=False)
-        db.session.add(new_user)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, confirmed=False)
+        db.session.add(user)
         db.session.commit()
-        token = generate_confirmation_token(new_user.email)
+        token = generate_confirmation_token(user.email)
         return redirect(url_for('login'))
     return render_template('signup.html', form=form)
 
@@ -98,11 +98,11 @@ def confirm_email(token):
         email = confirm_token(token)
     except:
         flash('The confirmation link is invalid or has expired.', 'danger')
-    new_user = User.query.filter_by(email=email).first_or_404()
-    if new_user.confirmed:
+    user = User.query.filter_by(email=email).first_or_404()
+    if user.confirmed:
         flash('Account already confirmed. Please login', 'success')
     else:
-        new_user.confirmed = True
+        user.confirmed = True
         db.session.add(User)
         db.session.commit()
         flash('You have confirmed your account. Thanks!', 'success')
