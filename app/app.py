@@ -37,8 +37,7 @@ app.config['MYSQL_DATABASE_PORT'] = 3306
 app.config['MYSQL_DATABASE_DB'] = 'numberData'
 mysql.init_app(app)
 
-
-#____________USER DATABASE, INDEX, LOGIN, SIGNUP, AND LOGOUT
+#____________USER CLASS____________
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -51,6 +50,8 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+#____________LOGIN / REGISTER FORMS____________
+
 class LoginForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
@@ -61,6 +62,8 @@ class RegisterForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
 
+#____________INDEX____________
+
 @app.route('/', methods=['GET'])
 @login_required
 def index():
@@ -68,6 +71,8 @@ def index():
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
     return render_template('index.html', name=current_user.username, num_result=result)
+
+#____________LOGIN____________
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -81,9 +86,7 @@ def login():
         return '<h1>Invalid username or password</h1>'
     return render_template('login.html', form=form)
 
-def send_email(to, subject, template):
-    msg = Message(subject, recipients=[to], html=template, sender=app.config['MAIL_DEFAULT_SENDER'])
-    mail.send(msg)
+#____________SIGNUP____________
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -108,19 +111,7 @@ def signup():
 
     return render_template('signup.html', form=form)
 
-def generate_confirmation_token(email):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
-
-def confirm_token(token, expiration=3600):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    try:
-        email = serializer.loads(
-            token,
-            salt=app.config['SECURITY_PASSWORD_SALT'], max_age=expiration)
-    except:
-        return False
-    return email
+#____________CONFIRM____________
 
 @app.route('/confirm/<token>')
 @login_required
@@ -138,13 +129,35 @@ def confirm_email(token):
         flash('You have confirmed your account. Thanks!', 'success')
     return redirect(url_for('index'))
 
+#____________EXTENSIONS____________
+
+def send_email(to, subject, template):
+    msg = Message(subject, recipients=[to], html=template, sender=app.config['MAIL_DEFAULT_SENDER'])
+    mail.send(msg)
+
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
+
+def confirm_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    try:
+        email = serializer.loads(
+            token,
+            salt=app.config['SECURITY_PASSWORD_SALT'], max_age=expiration)
+    except:
+        return False
+    return email
+
+#____________LOGOUT____________
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
-# _--------------------------------------------
+#____________MAIN____________
 
 @app.route('/view/<int:num_id>', methods=['GET'])
 def record_view(num_id):
@@ -152,7 +165,6 @@ def record_view(num_id):
     cursor.execute('SELECT * FROM numberImport WHERE id=%s', num_id)
     result = cursor.fetchall()
     return render_template('view.html', title='View Form', num_result=result[0])
-
 
 @app.route('/delete/<int:num_id>', methods=['POST'])
 def form_delete_post(num_id):
@@ -162,11 +174,7 @@ def form_delete_post(num_id):
     mysql.get_db().commit()
     return redirect("/", code=302)
 
-
-
-
-#____________POSTMAN API's
-
+#____________POSTMAN API's____________
 
 @app.route('/api/numbers', methods=['GET'])
 def api_num_browse() -> str:
