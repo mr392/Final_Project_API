@@ -95,7 +95,7 @@ def login():
                 if current_user.confirmed:
                     return redirect(url_for('index'))
             return render_template('unconfirmed.html')
-        return '<h1>Invalid username or password</h1>'
+        return render_template('invalid.html')
     return render_template('login.html', form=form)
 
 #____________SIGNUP____________
@@ -138,7 +138,7 @@ def confirm_email(token):
         user.confirmed = True
         db.session.commit()
         flash('You have confirmed your account. Thanks!', 'success')
-    return redirect(url_for('index'))
+    return render_template('confirmed.html')
 
 #____________UNCONFIRMED____________
 
