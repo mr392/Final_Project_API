@@ -81,10 +81,11 @@ def login():
         return '<h1>Invalid username or password</h1>'
     return render_template('login.html', form=form)
 
-@app.route('/signup', methods=['GET', 'POST'])
 def send_email(to, subject, template):
     msg = Message(subject, recipients=[to], html=template, sender=app.config['MAIL_DEFAULT_SENDER'])
     mail.send(msg)
+
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm(request.form)
     if form.validate_on_submit():
@@ -95,7 +96,7 @@ def signup():
         db.session.commit()
 
         token = generate_confirmation_token(user.email)
-        confirm_url = url_for('user.confirm_email', token=token, _external=True)
+        confirm_url = url_for('confirm_email', token=token, _external=True)
         html = render_template('activate.html', confirm_url=confirm_url)
         subject = "Please confirm your email"
         send_email(user.email, subject, html)
@@ -107,11 +108,10 @@ def signup():
 
     return render_template('signup.html', form=form)
 
-@app.route('/confirm/<token>')
-@login_required
 def generate_confirmation_token(email):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
+
 def confirm_token(token, expiration=3600):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     try:
@@ -121,6 +121,9 @@ def confirm_token(token, expiration=3600):
     except:
         return False
     return email
+
+@app.route('/confirm/<token>')
+@login_required
 def confirm_email(token):
     try:
         email = confirm_token(token)
