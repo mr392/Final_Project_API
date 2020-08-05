@@ -1,6 +1,6 @@
 from typing import List, Dict
 import simplejson as json
-from flask import Flask, request, Response, redirect, render_template, url_for
+from flask import Flask, request, Response, redirect, render_template, url_for, flash
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
 import Calculator as calc
@@ -14,14 +14,20 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
+from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
+from functools import wraps
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./database.db'
+app.config.from_pyfile('config.cfg')
 Bootstrap(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+mail = Mail(app)
 
 mysql = MySQL(cursorclass=DictCursor)
 
@@ -32,18 +38,20 @@ app.config['MYSQL_DATABASE_PORT'] = 3306
 app.config['MYSQL_DATABASE_DB'] = 'numberData'
 mysql.init_app(app)
 
-
-#____________USER DATABASE, INDEX, LOGIN, SIGNUP, AND LOGOUT
+#____________USER CLASS____________
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True)
     username = db.Column(db.String(15), unique=True)
     password = db.Column(db.String(80), unique=True)
+    confirmed = db.Column(db.Boolean, nullable=False, default=False)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+#____________LOGIN / REGISTER FORMS____________
 
 class LoginForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
@@ -55,6 +63,8 @@ class RegisterForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
 
+#____________INDEX____________
+
 @app.route('/', methods=['GET'])
 @login_required
 def index():
@@ -62,6 +72,8 @@ def index():
     cursor.execute('SELECT * FROM numberImport')
     result = cursor.fetchall()
     return render_template('index.html', name=current_user.username, num_result=result)
+
+#____________LOGIN____________
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -71,20 +83,98 @@ def login():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
-                return redirect(url_for('index'))
-        return '<h1>Invalid username or password</h1>'
+                if current_user.confirmed:
+                    return redirect(url_for('index'))
+            return render_template('unconfirmed.html')
+        return render_template('invalid.html')
     return render_template('login.html', form=form)
+
+#____________SIGNUP____________
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    form = RegisterForm()
+    form = RegisterForm(request.form)
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
-        db.session.add(new_user)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, confirmed=False)
+
+        db.session.add(user)
         db.session.commit()
-        return redirect(url_for('login'))
+
+        token = generate_confirmation_token(user.email)
+        confirm_url = url_for('confirm_email', token=token, _external=True)
+        html = render_template('activate.html', confirm_url=confirm_url)
+        subject = "Please confirm your email"
+        send_email(user.email, subject, html)
+
+        login_user(user)
+
+        flash('A confirmation email has been sent via email.', 'success')
+        return render_template('unconfirmed.html')
+
     return render_template('signup.html', form=form)
+
+#____________CONFIRM____________
+
+@app.route('/confirm/<token>')
+def confirm_email(token):
+    try:
+        email = confirm_token(token)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    user = User.query.filter_by(email=email).first_or_404()
+    if user.confirmed:
+        flash('Account already confirmed. Please login', 'success')
+    else:
+        user.confirmed = True
+        db.session.commit()
+        flash('You have confirmed your account. Thanks!', 'success')
+    return render_template('confirmed.html')
+
+#____________UNCONFIRMED____________
+
+@app.route('/unconfirmed')
+@login_required
+def unconfirmed():
+    if current_user.confirmed:
+        return redirect(url_for('index'))
+    flash('Please confirm your account!', 'warning')
+    return render_template('unconfirmed.html')
+
+#____________RESEND____________
+
+@app.route('/resend')
+@login_required
+def resend_confirmation():
+    token = generate_confirmation_token(current_user.email)
+    confirm_url = url_for('confirm_email', token=token, _external=True)
+    html = render_template('activate.html', confirm_url=confirm_url)
+    subject = "Resending confirmation email"
+    send_email(current_user.email, subject, html)
+    flash('A new confirmation email has been sent.', 'success')
+    return redirect(url_for('unconfirmed'))
+
+#____________EXTENSIONS____________
+
+def send_email(to, subject, template):
+    msg = Message(subject, recipients=[to], html=template, sender=app.config['MAIL_DEFAULT_SENDER'])
+    mail.send(msg)
+
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
+
+def confirm_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    try:
+        email = serializer.loads(
+            token,
+            salt=app.config['SECURITY_PASSWORD_SALT'], max_age=expiration)
+    except:
+        return False
+    return email
+
+#____________LOGOUT____________
 
 @app.route('/logout')
 @login_required
@@ -92,7 +182,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-# _--------------------------------------------
+#____________MAIN____________
 
 @app.route('/view/<int:num_id>', methods=['GET'])
 def record_view(num_id):
@@ -100,7 +190,6 @@ def record_view(num_id):
     cursor.execute('SELECT * FROM numberImport WHERE id=%s', num_id)
     result = cursor.fetchall()
     return render_template('view.html', title='View Form', num_result=result[0])
-
 
 @app.route('/delete/<int:num_id>', methods=['POST'])
 def form_delete_post(num_id):
@@ -110,11 +199,7 @@ def form_delete_post(num_id):
     mysql.get_db().commit()
     return redirect("/", code=302)
 
-
-
-
-#____________POSTMAN API's
-
+#____________POSTMAN API's____________
 
 @app.route('/api/numbers', methods=['GET'])
 def api_num_browse() -> str:
