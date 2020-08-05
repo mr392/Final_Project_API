@@ -19,6 +19,7 @@ from itsdangerous import URLSafeTimedSerializer
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./database.db'
+app.config.from_pyfile('config.cfg')
 Bootstrap(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
