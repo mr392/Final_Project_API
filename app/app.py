@@ -1,6 +1,6 @@
 from typing import List, Dict
 import simplejson as json
-from flask import Flask, request, Response, redirect, render_template, url_for
+from flask import Flask, request, Response, redirect, render_template, url_for, flash
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
 import Calculator as calc
@@ -13,10 +13,9 @@ from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from flask import flash
 
-from email import send_email
-from token import generate_confirmation_token, confirm_token
+from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./database.db'
@@ -25,6 +24,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+mail = Mail(app)
 
 mysql = MySQL(cursorclass=DictCursor)
 
@@ -80,6 +81,9 @@ def login():
     return render_template('login.html', form=form)
 
 @app.route('/signup', methods=['GET', 'POST'])
+def send_email(to, subject, template):
+    msg = Message(subject, recipients=[to], html=template, sender=app.config['MAIL_DEFAULT_SENDER'])
+    mail.send(msg)
 def signup():
     form = RegisterForm(request.form)
     if form.validate_on_submit():
@@ -104,6 +108,18 @@ def signup():
 
 @app.route('/confirm/<token>')
 @login_required
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
+def confirm_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    try:
+        email = serializer.loads(
+            token,
+            salt=app.config['SECURITY_PASSWORD_SALT'], max_age=expiration)
+    except:
+        return False
+    return email
 def confirm_email(token):
     try:
         email = confirm_token(token)
