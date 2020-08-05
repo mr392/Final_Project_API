@@ -48,20 +48,20 @@ More server-side details about the confirmation email:
 #### User Email
 The user then receives the confirmation email in their inbox (example: Guerrilla Mail, a temporary email address creator).
 
-![new_email1](screenshots/new_email1.png)
+![new_email1](screenshots/new_email1.PNG)
 
 The email contains a confirmation link that, when clicked, allows the user to activate their account.
 
-![new_email1](screenshots/new_email2.png)
+![new_email1](screenshots/new_email2.PNG)
 
 #### Confirmed Account
 Upon clicking the email link, the user is then redirected to a page with an account confirmation message and a link to the login page.
 
-![confirmed](screenshots/confirmed.png)
+![confirmed](screenshots/confirmed.PNG)
 
 ### Login (after confirmation)
 Now, the user can login!
-![login_confirmed](screenshots/login_confirmed.png)
+![login_confirmed](screenshots/login_confirmed.PNG)
 
 #### Calculation Screen
 After logging in, the user is greeted by the calculation screen (and is also able to log out through the navigation above):  
@@ -93,9 +93,3 @@ Data can actually be read and written to our app using API's and json. To use po
 Deletions can also be completed by supplying the id number as part of the request. 
 
 ![postman_delete](screenshots/postman_delete.PNG)
-
-
- 
- 
-
-
