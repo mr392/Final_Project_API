@@ -16,6 +16,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
+from functools import wraps
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./database.db'
@@ -107,7 +108,7 @@ def signup():
         login_user(user)
 
         flash('A confirmation email has been sent via email.', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('unconfirmed'))
 
     return render_template('signup.html', form=form)
 
@@ -129,6 +130,16 @@ def confirm_email(token):
         flash('You have confirmed your account. Thanks!', 'success')
     return redirect(url_for('index'))
 
+#____________UNCONFIRMED____________
+
+@app.route('/unconfirmed')
+@login_required
+def unconfirmed():
+    if current_user.confirmed:
+        return redirect(url_for('index'))
+    flash('Please confirm your account!', 'warning')
+    return render_template('unconfirmed.html')
+
 #____________EXTENSIONS____________
 
 def send_email(to, subject, template):
@@ -148,6 +159,15 @@ def confirm_token(token, expiration=3600):
     except:
         return False
     return email
+
+def check_confirmed(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        if current_user.confirmed is False:
+            flash('Please confirm your account!', 'warning')
+            return redirect(url_for(unconfirmed))
+        return func(*args, **kwargs)
+    return decorated_function
 
 #____________LOGOUT____________
 

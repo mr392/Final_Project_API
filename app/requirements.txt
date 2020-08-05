@@ -2,6 +2,7 @@ Flask
 flask-mysql
 flask-login
 flask-mail
+functools
 flask-sqlalchemy
 simplejson
 flask-wtf
