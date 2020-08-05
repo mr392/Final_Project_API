@@ -2,8 +2,10 @@
 
 ### Team:
 ##### Douglas Rizio 
+Features worked on - Flask, login and verification, email verifications, general fix-ups
 
-##### Michael Rock
+##### Michael Rock - 
+Features worked on - Templates, charts, calculator and stats functions, general layout  
 
 ### Installation
 The app can be cloned from the git repository and started with a simple docker-compose up command.
@@ -28,7 +30,7 @@ After signing up or signing in the user is greeted by the calculation screen:
 The left column displays the number entry and database table of all entries. The calculations can be performed on any two numbers.
 For operations that require only one number (square, square root) please enter a zero in the second box. 
 
-The right column displays the totals along with a trend line of all entries. Clicking on the id number of an equation will bring the user to the individual calculation scrren. The user then has an option to delete equation from the database. 
+The right column displays the totals along with a trend line of all entries. These utilize the chartist.js charting library. Clicking on the id number of an equation will bring the user to the individual calculation scrren. The user then has an option to delete equation from the database. 
 ![view_delete](screenshots/view_delete.PNG) 
 
 #### Stats Page
