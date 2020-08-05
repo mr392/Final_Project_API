@@ -51,6 +51,15 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+def check_confirmed(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        if current_user.confirmed is False:
+            flash('Please confirm your account!', 'warning')
+            return render_template('unconfirmed.html')
+        return func(*args, **kwargs)
+    return decorated_function
+
 #____________LOGIN / REGISTER FORMS____________
 
 class LoginForm(FlaskForm):
@@ -83,7 +92,9 @@ def login():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
-                return redirect(url_for('index'))
+                if current_user.confirmed:
+                    return redirect(url_for('index'))
+            return render_template('unconfirmed.html')
         return '<h1>Invalid username or password</h1>'
     return render_template('login.html', form=form)
 
@@ -108,14 +119,13 @@ def signup():
         login_user(user)
 
         flash('A confirmation email has been sent via email.', 'success')
-        return redirect(url_for('unconfirmed'))
+        return render_template('unconfirmed.html')
 
     return render_template('signup.html', form=form)
 
 #____________CONFIRM____________
 
 @app.route('/confirm/<token>')
-@login_required
 def confirm_email(token):
     try:
         email = confirm_token(token)
@@ -159,15 +169,6 @@ def confirm_token(token, expiration=3600):
     except:
         return False
     return email
-
-def check_confirmed(func):
-    @wraps(func)
-    def decorated_function(*args, **kwargs):
-        if current_user.confirmed is False:
-            flash('Please confirm your account!', 'warning')
-            return redirect(url_for(unconfirmed))
-        return func(*args, **kwargs)
-    return decorated_function
 
 #____________LOGOUT____________
 
