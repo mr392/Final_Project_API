@@ -130,7 +130,7 @@
 </div>
 
 <div id="right_col">
-    <h1>Total</h1>
+    <h1>Mean</h1>
     <div class="ct-chart ct-golden-section" id="chart_total"></div>
 
 
@@ -139,12 +139,12 @@
  //Total data
     var data = {
 
-  labels: [{% for stat in stat_result %}
+  labels: [{% for stat in mean_count %}
                "{{ stat.id }}",
               {% endfor %}],
 
   series: [
-    [{% for stat in stat_result %}
+    [{% for stat in mean_count %}
                "{{ stat.result }}",
               {% endfor %}]
   ]
