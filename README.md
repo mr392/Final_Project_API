@@ -14,7 +14,7 @@ using the Chartist.js, and Flask libraries. Our app also utilizes Docker, Python
 
 ### Usage 
 
-login
+#### Log-in
 
 
 #### Calculation Screen
@@ -26,6 +26,12 @@ The left column displays the number entry and database table of all entries. The
 For operations that require only one number (square, square root) please enter a zero in the second box. 
 
 The right column displays the totals along with a trend line of all entries. 
+
+#### Stats Page
+At the top of the page you will find a link to the stats page. 
+![stats page](screenshots/stats_page.PNG)
+
+In order to use the stats functions six numbers **MUST** be entered. The stats screen tracks the total as we 
 
  
 
