@@ -134,7 +134,6 @@ def confirm_email(token):
         flash('Account already confirmed. Please login', 'success')
     else:
         user.confirmed = True
-        db.session.add(User)
         db.session.commit()
         flash('You have confirmed your account. Thanks!', 'success')
     return redirect(url_for('index'))
