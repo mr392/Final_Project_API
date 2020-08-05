@@ -15,6 +15,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask import flash
 
+from email import send_email
 from token import generate_confirmation_token, confirm_token
 
 app = Flask(__name__)
@@ -81,14 +82,25 @@ def login():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    form = RegisterForm()
+    form = RegisterForm(request.form)
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
         user = User(username=form.username.data, email=form.email.data, password=hashed_password, confirmed=False)
+
         db.session.add(user)
         db.session.commit()
+
         token = generate_confirmation_token(user.email)
+        confirm_url = url_for('user.confirm_email', token=token, _external=True)
+        html = render_template('activate.html', confirm_url=confirm_url)
+        subject = "Please confirm your email"
+        send_email(user.email, subject, html)
+
+        login_user(user)
+
+        flash('A confirmation email has been sent via email.', 'success')
         return redirect(url_for('login'))
+
     return render_template('signup.html', form=form)
 
 @app.route('/confirm/<token>')
