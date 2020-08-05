@@ -8,14 +8,16 @@ table, th, td {
 }
 
 .left {
+  top: 600px;
   position: absolute;
   left: 25px;
-  width: 300px;
+  width: 350px;
   border: 3px solid #73AD21;
   padding: 10px;
 }
 
 .right {
+    top: 800px;
   position: absolute;
   right: 300px;
   width: 600px;
@@ -30,45 +32,129 @@ table, th, td {
         margin-right: 50%;
 
     }
+#chart1 {
+    top: 125px;
+    width: 800px;
+    height: 600px;
+    position: absolute;
+    left: 5px;
+    right: 20%;
+}
+
+#chart2 {
+    top: 125px;
+    width: 800px;
+    height: 600px;
+    position: absolute;
+    right: 10px;
+    left: 62%;
+
+}
+
+.lt {
+    width: auto;
+    top: 100px;
+
+    text-align: left ;
+
+}
+.rt {
+    top: 100px;
+    vertical-align: top ;
+    text-align: center;
+
+}
+
+
+#main_table {
+
+  top: 700px;
+  position: absolute;
+  left: 25px;
+  width:750px;
+
+  border: 3px solid #73AD21;
+  padding: 10px;
+}
+.entry {
+
+  position: absolute;
+  top: 7%;
+  left: 25px;
+  width: 350px;
+  border: 3px solid #73AD21;
+  padding: 10px;
+}
+
+#right_col {
+
+    position: absolute;
+    Left: 65%;
+    width: 475px;
+
+}
+
+#chart1 {
+    position: absolute;
+    top: 7%;
+    bottom: 30%;
+    Left: 45%;
+    height: 400px;
+    width: 475px;
+
+}
+
+#chart2 {
+    position: absolute;
+    top: 60%;
+    Left: 45%;
+    height: 400px;
+    width: 475px;
+
+
+}
+
+
+
 </style>
 
+<div class="entry">
+   <form action="/" method="POST">
+       <h2>Enter Numbers Here</h2>
+        <div class="row2">
+            <label for="num1">First Number</label>
+            <input id="num1" type="text" class="form-control" placeholder="First Number" name="num1">
+        </div>
+        <div class="row2">
+            <label for="num2">Second Number</label>
+            <input id="num2" type="text" class="form-control" placeholder="Second Number"
+                   name="num2">
+        </div>
+        <div class="row2">
+         <label for="operation">Select Operation</label>
+         <select id="operation" class="form-control" name="operation">
+            <option value = "add" selected>Add</option>
+            <option value = "subtract">Subtract</option>
+            <option value = "multiply">Multiply</option>
+             <option value = "divide">Divide</option>
+             <option value = "square">Square</option>
+             <option value = "sqrt">Square Root</option>
+         </select>
+
+        </div>
+       <br>
 
 
-<div class="ct-chart"> </div>
-<script>
+    <button type="submit" class="btn btn-success">Calculate</button>
 
+   </form>
+</div>
 
-var data = {
-  // A labels array that can contain any sort of values
-  labels: [{% for num in num_result %}
-               "{{ num.id }}",
-              {% endfor %}],
-  // Our series array that contains series objects or in this case series data arrays
-  series: [
-    [{% for num in num_result %}
-               "{{ num.result }}",
-              {% endfor %}]
-  ]
-};
+<div id="main_table ">
+<table class="left" >
 
-// As options we currently only set a static size of 300x200 px. We can also omit this and use aspect ratio containers
-// as you saw in the previous example
-var options = {
-  width: 900,
-  height: 700
-};
-
-// Create a new line chart object where as first parameter we pass in a selector
-// that is resolving to our chart container element. The Second parameter
-// is the actual data object. As a third parameter we pass in our custom options.
-new Chartist.Bar('.ct-chart', data, options);
-
-
-</script>
-
-
-<table class="left" style="width:900px">
     <thead>
+
     <tr>
         <th scope="col">ID</th>
         <th scope="col">Number 1</th>
@@ -95,30 +181,57 @@ new Chartist.Bar('.ct-chart', data, options);
     </tbody>
 </table>
 
-<div class="right">
-   <form action="/" method="POST">
-
-        <div class="row2">
-            <label for="num1">First Number</label>
-            <input id="num1" type="text" class="form-control" placeholder="First Number" name="num1">
-        </div>
-        <div class="row2">
-            <label for="num2">Second Number</label>
-            <input id="num2" type="text" class="form-control" placeholder="Second Number"
-                   name="num2">
-        </div>
-        <div class="row2">
-            <label for="operation">Operation</label>
-            <input id="operation" type="text" class="form-control" placeholder="Operation" name="operation">
-        </div>
-       <br>
-
-
-    <button type="submit" class="btn btn-success">Calculate</button>
-
-   </form>
 </div>
+
+<div id ="chart1">
+ <h1>Total</h1>
+<div class="ct-chart ct-golden-section" id="chart1"></div>
+</div>
+
+<div id = "chart2">
+    <h1>Trend</h1>
+<div class="ct-chart ct-golden-section" id="chart2"></div>
+</div>
+
+
+
+
+<script>
+  // Initialize a Line chart in the container with the ID chart1
+    var data = {
+  // A labels array that can contain any sort of values
+  labels: [{% for num in num_result %}
+               "{{ num.id }}",
+              {% endfor %}],
+  // Our series array that contains series objects or in this case series data arrays
+  series: [
+    [{% for num in num_result %}
+               "{{ num.result }}",
+              {% endfor %}]
+  ]
+};
+
+
+
+  new Chartist.Bar('#chart1', data);
+
+
+  new Chartist.Line('#chart2', data);
+
+
+
+
+</script>
+
+
+
+
+
+
 {% endblock %}
+
+
+
 
 
 
