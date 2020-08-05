@@ -51,15 +51,6 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-def check_confirmed(func):
-    @wraps(func)
-    def decorated_function(*args, **kwargs):
-        if current_user.confirmed is False:
-            flash('Please confirm your account!', 'warning')
-            return render_template('unconfirmed.html')
-        return func(*args, **kwargs)
-    return decorated_function
-
 #____________LOGIN / REGISTER FORMS____________
 
 class LoginForm(FlaskForm):
@@ -149,6 +140,19 @@ def unconfirmed():
         return redirect(url_for('index'))
     flash('Please confirm your account!', 'warning')
     return render_template('unconfirmed.html')
+
+#____________RESEND____________
+
+@app.route('/resend')
+@login_required
+def resend_confirmation():
+    token = generate_confirmation_token(current_user.email)
+    confirm_url = url_for('confirm_email', token=token, _external=True)
+    html = render_template('activate.html', confirm_url=confirm_url)
+    subject = "Resending confirmation email"
+    send_email(current_user.email, subject, html)
+    flash('A new confirmation email has been sent.', 'success')
+    return redirect(url_for('unconfirmed'))
 
 #____________EXTENSIONS____________
 
